@@ -21,5 +21,18 @@ export default defineConfig({
         changeOrigin: true,
       },
     },
+    watch: {
+      // Ignore OneDrive temp/sync files and heavy directories
+      ignored: [
+        '**/.git/**',
+        '**/node_modules/**',
+        '**/dist/**',
+        '**/*.tmp',
+        '**/*.temp',
+        '**/~*',
+        '**/.~lock.*',
+      ],
+      usePolling: false,
+    },
   },
 });
