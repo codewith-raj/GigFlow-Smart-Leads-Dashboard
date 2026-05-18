@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import { Lead } from '../models/Lead';
 import { AppError } from '../middlewares/errorHandler';
-import { ILead, PaginationMeta } from '../types';
+import { ILead, LeadStatus, LeadSource, PaginationMeta } from '../types';
 import { CreateLeadInput, UpdateLeadInput, LeadQueryInput } from '../validations/lead.validation';
 
 export interface PaginatedLeads {
@@ -9,21 +9,29 @@ export interface PaginatedLeads {
   pagination: PaginationMeta;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type MongoFilter = Record<string, any>;
+/**
+ * Typed MongoDB filter for leads.
+ * Uses discriminated union fields — avoids `any` while staying compatible
+ * with Mongoose's flexible find() signature.
+ */
+interface LeadFilter {
+  status?: LeadStatus;
+  source?: LeadSource;
+  $or?: Array<{ name: RegExp } | { email: RegExp }>;
+}
 
 export class LeadService {
   async getLeads(query: LeadQueryInput): Promise<PaginatedLeads> {
     const { page, limit, status, source, search, sort } = query;
 
-    const filter: MongoFilter = {};
+    const filter: LeadFilter = {};
 
-    if (status) filter['status'] = status;
-    if (source) filter['source'] = source;
+    if (status) filter.status = status;
+    if (source) filter.source = source;
 
     if (search && search.trim()) {
       const searchRegex = new RegExp(search.trim(), 'i');
-      filter['$or'] = [{ name: searchRegex }, { email: searchRegex }];
+      filter.$or = [{ name: searchRegex }, { email: searchRegex }];
     }
 
     const sortOrder = sort === 'oldest' ? 1 : -1;
@@ -88,14 +96,14 @@ export class LeadService {
   }
 
   async getLeadsForExport(query: Omit<LeadQueryInput, 'page' | 'limit'>): Promise<ILead[]> {
-    const filter: MongoFilter = {};
+    const filter: LeadFilter = {};
 
-    if (query.status) filter['status'] = query.status;
-    if (query.source) filter['source'] = query.source;
+    if (query.status) filter.status = query.status;
+    if (query.source) filter.source = query.source;
 
     if (query.search?.trim()) {
       const searchRegex = new RegExp(query.search.trim(), 'i');
-      filter['$or'] = [{ name: searchRegex }, { email: searchRegex }];
+      filter.$or = [{ name: searchRegex }, { email: searchRegex }];
     }
 
     const leads = await Lead.find(filter)
