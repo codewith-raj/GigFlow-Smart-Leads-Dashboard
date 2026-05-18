@@ -65,7 +65,7 @@ const LeadDetailsPage: React.FC = () => {
       </Button>
 
       {/* Lead Card */}
-      <div className="bg-slate-900/60 border border-slate-700/50 rounded-2xl overflow-hidden">
+      <div className="panel-elevated rounded-2xl overflow-hidden">
         {/* Header */}
         <div className="bg-gradient-to-r from-violet-600/10 to-indigo-600/10 border-b border-slate-700/40 p-6">
           <div className="flex items-start gap-4">

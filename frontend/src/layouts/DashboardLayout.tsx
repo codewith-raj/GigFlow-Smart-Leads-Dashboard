@@ -5,7 +5,7 @@ import TopNavbar from './TopNavbar';
 
 const DashboardLayout: React.FC = () => {
   return (
-    <div className="flex h-screen bg-slate-950 overflow-hidden">
+    <div className="flex h-screen app-shell-bg overflow-hidden">
       <Sidebar />
       <div className="flex flex-col flex-1 min-w-0 overflow-hidden">
         <TopNavbar />

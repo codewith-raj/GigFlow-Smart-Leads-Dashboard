@@ -1,6 +1,23 @@
-export const APP_NAME = 'Smart Leads';
+export const APP_NAME = 'GigFlow';
+export const APP_PRODUCT = 'Smart Leads Dashboard';
+export const APP_FULL_NAME = 'GigFlow Smart Leads Dashboard';
+export const PROJECT_SLUG = 'gigflow-smart-leads-dashboard';
+export const LOGO_PATH = '/logo.png';
+export const BRAND_COLOR = '#ef4444';
+export const APP_TAGLINE =
+  'Track, qualify, and convert leads with enterprise-grade filtering and team permissions.';
 
 export const API_BASE_URL = import.meta.env.VITE_API_URL ?? '/api';
+
+export const ROLE_LABELS: Record<'admin' | 'sales', string> = {
+  admin: 'Admin',
+  sales: 'Sales User',
+};
+
+export const ROLE_DESCRIPTIONS: Record<'admin' | 'sales', string> = {
+  admin: 'Full access — delete leads, export CSV, manage pipeline',
+  sales: 'Create & update leads, view pipeline and lead details',
+};
 
 export const LEAD_STATUSES = ['new', 'contacted', 'qualified', 'lost'] as const;
 export const LEAD_SOURCES = ['website', 'instagram', 'referral'] as const;

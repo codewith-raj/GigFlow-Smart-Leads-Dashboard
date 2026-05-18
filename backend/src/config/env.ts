@@ -9,6 +9,7 @@ interface EnvConfig {
   JWT_EXPIRES_IN: string;
   NODE_ENV: string;
   FRONTEND_URL: string;
+  ALLOW_ADMIN_REGISTRATION: boolean;
 }
 
 const getEnvVar = (key: string, defaultValue?: string): string => {
@@ -26,4 +27,6 @@ export const env: EnvConfig = {
   JWT_EXPIRES_IN: getEnvVar('JWT_EXPIRES_IN', '7d'),
   NODE_ENV: getEnvVar('NODE_ENV', 'development'),
   FRONTEND_URL: getEnvVar('FRONTEND_URL', 'http://localhost:5173'),
+  ALLOW_ADMIN_REGISTRATION:
+    getEnvVar('ALLOW_ADMIN_REGISTRATION', 'true').toLowerCase() === 'true',
 };

@@ -35,7 +35,11 @@ const createApp = (): Application => {
   app.get('/health', (_req: Request, res: Response) => {
     res.status(200).json({
       success: true,
-      message: 'Smart Leads API is healthy',
+      message: 'GigFlow Smart Leads API is healthy',
+      data: {
+        service: 'gigflow-smart-leads-dashboard-api',
+        version: '1.0.0',
+      },
       timestamp: new Date().toISOString(),
       environment: env.NODE_ENV,
     });

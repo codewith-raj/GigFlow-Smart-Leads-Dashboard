@@ -19,7 +19,7 @@ const StatCard: React.FC<StatCardProps> = ({
   iconBgClass = 'bg-violet-500/10 border-violet-500/20',
 }) => {
   return (
-    <div className="bg-slate-900/60 border border-slate-700/50 rounded-2xl p-6 hover:border-slate-600/50 transition-all duration-300 hover:bg-slate-900/80 group">
+    <div className="panel-elevated rounded-2xl p-6 hover:border-slate-600/50 transition-all duration-300 group">
       <div className="flex items-start justify-between">
         <div className="flex-1">
           <p className="text-sm text-slate-400 font-medium mb-1">{title}</p>

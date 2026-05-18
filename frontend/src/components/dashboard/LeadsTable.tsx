@@ -1,26 +1,31 @@
 import React from 'react';
-import { Edit2, Trash2, Eye } from 'lucide-react';
+import { Edit2, Trash2, Eye, Plus, SearchX } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import Badge from '@/components/ui/Badge';
 import Loader from '@/components/ui/Loader';
 import EmptyState from '@/components/ui/EmptyState';
+import Button from '@/components/ui/Button';
 import { Lead, UserRole } from '@/types';
 import { STATUS_COLORS, SOURCE_COLORS, STATUS_LABELS, SOURCE_LABELS } from '@/constants';
 
 interface LeadsTableProps {
   leads: Lead[];
   isLoading: boolean;
+  hasActiveFilters: boolean;
   userRole: UserRole;
   onEdit: (lead: Lead) => void;
   onDelete: (lead: Lead) => void;
+  onCreateLead: () => void;
 }
 
 const LeadsTable: React.FC<LeadsTableProps> = ({
   leads,
   isLoading,
+  hasActiveFilters,
   userRole,
   onEdit,
   onDelete,
+  onCreateLead,
 }) => {
   const navigate = useNavigate();
 
@@ -31,8 +36,25 @@ const LeadsTable: React.FC<LeadsTableProps> = ({
   if (leads.length === 0) {
     return (
       <EmptyState
-        title="No leads yet"
-        description="Create your first lead to get started tracking your pipeline."
+        title={hasActiveFilters ? 'No matching leads' : 'No leads yet'}
+        description={
+          hasActiveFilters
+            ? 'Try adjusting your filters or search term to find what you need.'
+            : 'Add your first lead to start building your sales pipeline.'
+        }
+        icon={<SearchX className="w-8 h-8 text-slate-500" />}
+        action={
+          hasActiveFilters ? undefined : (
+            <Button
+              variant="primary"
+              size="sm"
+              leftIcon={<Plus className="w-4 h-4" />}
+              onClick={onCreateLead}
+            >
+              Add Lead
+            </Button>
+          )
+        }
       />
     );
   }
@@ -55,10 +77,10 @@ const LeadsTable: React.FC<LeadsTableProps> = ({
             <th className="text-left text-xs font-semibold text-slate-400 uppercase tracking-wider px-4 py-3">
               Status
             </th>
-            <th className="text-left text-xs font-semibold text-slate-400 uppercase tracking-wider px-4 py-3">
+            <th className="text-left text-xs font-semibold text-slate-400 uppercase tracking-wider px-4 py-3 hidden md:table-cell">
               Source
             </th>
-            <th className="text-left text-xs font-semibold text-slate-400 uppercase tracking-wider px-4 py-3">
+            <th className="text-left text-xs font-semibold text-slate-400 uppercase tracking-wider px-4 py-3 hidden lg:table-cell">
               Created By
             </th>
             <th className="text-left text-xs font-semibold text-slate-400 uppercase tracking-wider px-4 py-3">
@@ -89,17 +111,17 @@ const LeadsTable: React.FC<LeadsTableProps> = ({
                   colorClass={STATUS_COLORS[lead.status] ?? ''}
                 />
               </td>
-              <td className="px-4 py-3.5">
+              <td className="px-4 py-3.5 hidden md:table-cell">
                 <Badge
                   label={SOURCE_LABELS[lead.source] ?? lead.source}
                   colorClass={SOURCE_COLORS[lead.source] ?? ''}
                 />
               </td>
-              <td className="px-4 py-3.5">
+              <td className="px-4 py-3.5 hidden lg:table-cell">
                 <p className="text-slate-400 text-xs">{getCreatorName(lead)}</p>
               </td>
               <td className="px-4 py-3.5">
-                <p className="text-slate-400 text-xs">
+                <p className="text-slate-400 text-xs whitespace-nowrap">
                   {new Date(lead.createdAt).toLocaleDateString('en-IN', {
                     day: '2-digit',
                     month: 'short',

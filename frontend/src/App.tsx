@@ -9,6 +9,7 @@ import LoginPage from '@/pages/LoginPage';
 import RegisterPage from '@/pages/RegisterPage';
 import DashboardPage from '@/pages/DashboardPage';
 import LeadDetailsPage from '@/pages/LeadDetailsPage';
+import NotFoundPage from '@/pages/NotFoundPage';
 import Loader from '@/components/ui/Loader';
 
 const queryClient = new QueryClient({
@@ -45,20 +46,7 @@ const App: React.FC = () => {
             </Route>
 
             {/* 404 catch-all */}
-            <Route
-              path="*"
-              element={
-                <div className="min-h-screen bg-slate-950 flex items-center justify-center text-center p-4">
-                  <div>
-                    <h1 className="text-6xl font-bold text-violet-500 mb-4">404</h1>
-                    <p className="text-slate-300 text-lg mb-6">Page not found</p>
-                    <a href="/dashboard" className="text-violet-400 hover:underline text-sm">
-                      Go to Dashboard →
-                    </a>
-                  </div>
-                </div>
-              }
-            />
+            <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </Suspense>
       </BrowserRouter>
@@ -76,7 +64,7 @@ const App: React.FC = () => {
             fontSize: '14px',
           },
           success: {
-            iconTheme: { primary: '#8b5cf6', secondary: '#fff' },
+            iconTheme: { primary: '#ef4444', secondary: '#fff' },
           },
           error: {
             iconTheme: { primary: '#ef4444', secondary: '#fff' },

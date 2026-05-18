@@ -1,8 +1,8 @@
 {
   "info": {
-    "_postman_id": "smart-leads-api",
-    "name": "Smart Leads Dashboard API",
-    "description": "Full API documentation for the Smart Leads Dashboard. Base URL: http://localhost:5000/api",
+    "_postman_id": "gigflow-smart-leads-dashboard-api",
+    "name": "GigFlow Smart Leads Dashboard API",
+    "description": "Full API documentation for GigFlow Smart Leads Dashboard. Base URL: http://localhost:5000/api",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [

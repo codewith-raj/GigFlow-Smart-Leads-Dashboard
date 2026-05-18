@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   Plus,
@@ -17,11 +17,13 @@ import { Lead, LeadFilters } from '@/types';
 import { DEBOUNCE_DELAY } from '@/constants';
 import StatCard from '@/components/dashboard/StatCard';
 import FiltersBar from '@/components/dashboard/FiltersBar';
+import ActiveFilterChips from '@/components/dashboard/ActiveFilterChips';
 import LeadsTable from '@/components/dashboard/LeadsTable';
 import LeadFormModal from '@/components/forms/LeadFormModal';
 import ConfirmDeleteModal from '@/components/forms/ConfirmDeleteModal';
 import SearchBar from '@/components/ui/SearchBar';
 import Pagination from '@/components/ui/Pagination';
+import QueryErrorState from '@/components/ui/QueryErrorState';
 import Button from '@/components/ui/Button';
 
 const DashboardPage: React.FC = () => {
@@ -29,7 +31,6 @@ const DashboardPage: React.FC = () => {
   const queryClient = useQueryClient();
   const { exportCsv } = useCsvExport();
 
-  // Filter state
   const [filters, setFilters] = useState<Partial<LeadFilters>>({
     page: 1,
     limit: 10,
@@ -38,30 +39,36 @@ const DashboardPage: React.FC = () => {
   const [searchInput, setSearchInput] = useState('');
   const debouncedSearch = useDebounce(searchInput, DEBOUNCE_DELAY);
 
-  // Modal state
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [editingLead, setEditingLead] = useState<Lead | null>(null);
   const [deletingLead, setDeletingLead] = useState<Lead | null>(null);
 
-  // Fetch leads with all filters
-  const { data: leadsData, isLoading: leadsLoading } = useQuery({
+  const hasActiveFilters = useMemo(
+    () => !!(filters.status || filters.source || debouncedSearch?.trim()),
+    [filters.status, filters.source, debouncedSearch]
+  );
+
+  const {
+    data: leadsData,
+    isLoading: leadsLoading,
+    isError: leadsError,
+    refetch: refetchLeads,
+  } = useQuery({
     queryKey: ['leads', filters, debouncedSearch],
     queryFn: () => leadsApi.getLeads({ ...filters, search: debouncedSearch }),
     placeholderData: (prev) => prev,
   });
 
-  // Fetch stats
   const { data: statsData } = useQuery({
     queryKey: ['stats'],
     queryFn: leadsApi.getStats,
     staleTime: 60_000,
   });
 
-  // Delete mutation
   const deleteMutation = useMutation({
     mutationFn: (id: string) => leadsApi.deleteLead(id),
     onSuccess: () => {
-      toast.success('Lead deleted successfully!');
+      toast.success('Lead deleted successfully');
       queryClient.invalidateQueries({ queryKey: ['leads'] });
       queryClient.invalidateQueries({ queryKey: ['stats'] });
       setDeletingLead(null);
@@ -73,13 +80,21 @@ const DashboardPage: React.FC = () => {
     setFilters((prev) => ({
       ...prev,
       [key]: value || undefined,
-      page: 1, // Reset to page 1 on filter change
+      page: 1,
     }));
   }, []);
 
-  const handleResetFilters = useCallback(() => {
-    setFilters({ page: 1, limit: 10, sort: 'latest' });
-    setSearchInput('');
+  const handleClearFilter = useCallback((key: 'status' | 'source' | 'search' | 'all') => {
+    if (key === 'all') {
+      setFilters({ page: 1, limit: 10, sort: 'latest' });
+      setSearchInput('');
+      return;
+    }
+    if (key === 'search') {
+      setSearchInput('');
+    } else {
+      setFilters((prev) => ({ ...prev, [key]: undefined, page: 1 }));
+    }
   }, []);
 
   const handlePageChange = useCallback((page: number) => {
@@ -91,8 +106,7 @@ const DashboardPage: React.FC = () => {
   const pagination = leadsData?.pagination;
 
   return (
-    <div className="space-y-6">
-      {/* Stats Grid */}
+    <div className="space-y-6 max-w-[1400px] mx-auto">
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
         <StatCard
           title="Total Leads"
@@ -124,17 +138,16 @@ const DashboardPage: React.FC = () => {
         />
       </div>
 
-      {/* Main Leads Panel */}
-      <div className="bg-slate-900/40 border border-slate-700/40 rounded-2xl overflow-hidden">
-        {/* Panel Header */}
+      <div className="panel-elevated rounded-2xl overflow-hidden">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-6 border-b border-slate-700/40">
           <div>
-            <h2 className="text-lg font-semibold text-slate-100">All Leads</h2>
+            <h2 className="text-lg font-semibold text-slate-100">Lead Pipeline</h2>
             <p className="text-sm text-slate-400 mt-0.5">
-              {pagination?.totalRecords ?? 0} total leads in your pipeline
+              {pagination?.totalRecords ?? 0} leads
+              {hasActiveFilters ? ' matching your filters' : ' in your pipeline'}
             </p>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-wrap">
             {user?.role === 'admin' && (
               <Button
                 variant="outline"
@@ -165,47 +178,55 @@ const DashboardPage: React.FC = () => {
           </div>
         </div>
 
-        {/* Search + Filters */}
-        <div className="p-6 space-y-3 border-b border-slate-700/40">
+        <div className="p-6 space-y-4 border-b border-slate-700/40">
           <SearchBar
             value={searchInput}
             onChange={(val) => {
               setSearchInput(val);
               setFilters((prev) => ({ ...prev, page: 1 }));
             }}
-            placeholder="Search leads by name or email..."
-            className="w-full sm:max-w-sm"
+            placeholder="Search by name or email..."
+            className="w-full sm:max-w-md"
           />
           <FiltersBar
             filters={filters}
             onChange={handleFilterChange}
-            onReset={handleResetFilters}
+            onReset={() => handleClearFilter('all')}
+          />
+          <ActiveFilterChips
+            filters={filters}
+            search={debouncedSearch}
+            onClear={handleClearFilter}
           />
         </div>
 
-        {/* Table */}
         <div className="p-6">
-          <LeadsTable
-            leads={leads}
-            isLoading={leadsLoading}
-            userRole={user?.role ?? 'sales'}
-            onEdit={(lead) => setEditingLead(lead)}
-            onDelete={(lead) => setDeletingLead(lead)}
-          />
-
-          {/* Pagination */}
-          {pagination && (
-            <div className="mt-4 border-t border-slate-700/30 pt-4">
-              <Pagination
-                pagination={pagination}
-                onPageChange={handlePageChange}
+          {leadsError ? (
+            <QueryErrorState
+              title="Could not load leads"
+              onRetry={() => refetchLeads()}
+            />
+          ) : (
+            <>
+              <LeadsTable
+                leads={leads}
+                isLoading={leadsLoading}
+                hasActiveFilters={hasActiveFilters}
+                userRole={user?.role ?? 'sales'}
+                onEdit={(lead) => setEditingLead(lead)}
+                onDelete={(lead) => setDeletingLead(lead)}
+                onCreateLead={() => setIsCreateModalOpen(true)}
               />
-            </div>
+              {pagination && pagination.totalPages > 0 && (
+                <div className="mt-4 border-t border-slate-700/30 pt-4">
+                  <Pagination pagination={pagination} onPageChange={handlePageChange} />
+                </div>
+              )}
+            </>
           )}
         </div>
       </div>
 
-      {/* Modals */}
       <LeadFormModal
         isOpen={isCreateModalOpen || !!editingLead}
         onClose={() => {

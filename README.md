@@ -1,6 +1,6 @@
-# ⚡ Smart Leads Dashboard
+# GigFlow Smart Leads Dashboard
 
-> A production-quality MERN stack SaaS application for lead management with role-based access control, advanced filtering, and CSV export.
+> **GigFlow-Smart-Leads-Dashboard** — Production-ready MERN lead management platform with JWT authentication, RBAC (Admin / Sales User), advanced filtering with debounced search, server-side pagination, CSV export, Docker, and dark mode.
 
 ---
 
@@ -72,13 +72,17 @@
 - ✅ Toast notifications
 - ✅ Collapsible sidebar with mobile drawer
 - ✅ Lead detail page
+- ✅ **Dark / light mode** (persisted preference)
+- ✅ Split-screen auth experience with product highlights
+- ✅ Active filter chips & contextual empty states
+- ✅ Production guard: optional `ALLOW_ADMIN_REGISTRATION` env flag
 
 ---
 
 ## 📁 Folder Structure
 
 ```
-smart-lead-dashboard/
+GigFlow-Smart-Leads-Dashboard/
 ├── backend/
 │   └── src/
 │       ├── config/          # DB connection, env validation
@@ -108,6 +112,8 @@ smart-lead-dashboard/
 │       ├── store/           # Zustand auth store
 │       └── types/           # TypeScript interfaces
 │
+├── api-docs/
+│   └── gigflow-smart-leads-dashboard.postman_collection.json
 ├── docker-compose.yml
 ├── .gitignore
 └── README.md

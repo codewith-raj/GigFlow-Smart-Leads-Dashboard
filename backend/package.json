@@ -1,19 +1,17 @@
 {
-  "name": "backend",
+  "name": "gigflow-smart-leads-dashboard-backend",
   "version": "1.0.0",
-  "main": "index.js",
+  "description": "GigFlow Smart Leads Dashboard REST API",
+  "main": "dist/server.js",
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only --exit-child src/server.ts",
     "build": "tsc",
     "start": "node dist/server.js",
     "lint": "tsc --noEmit"
   },
-  "name": "smart-leads-backend",
-  "description": "Smart Leads Dashboard REST API",
-  "keywords": [],
+  "keywords": ["gigflow", "leads", "crm", "mern"],
   "author": "",
   "license": "ISC",
-  "description": "",
   "dependencies": {
     "bcryptjs": "^3.0.3",
     "cors": "^2.8.6",

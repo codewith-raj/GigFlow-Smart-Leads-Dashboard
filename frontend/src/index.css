@@ -16,8 +16,9 @@
   }
 
   body {
-    background-color: #020617;
-    color: #f1f5f9;
+    /* Use the CSS variable so light mode overrides take effect */
+    background-color: var(--color-slate-950);
+    color: var(--color-slate-100);
     margin: 0;
   }
 
@@ -28,17 +29,38 @@
   }
 
   ::-webkit-scrollbar-track {
-    background: #0f172a;
+    background: var(--color-slate-900);
   }
 
   ::-webkit-scrollbar-thumb {
-    background: #334155;
+    background: var(--color-slate-700);
     border-radius: 3px;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background: #475569;
+    background: var(--color-slate-600);
   }
+}
+
+/* ─── Light Mode ──────────────────────────────────────────────────────────────
+   Tailwind v4 exposes every color as a CSS custom property.
+   Overriding them here flips ALL bg-slate-*, text-slate-*, border-slate-*
+   utilities site-wide — no component changes required.
+───────────────────────────────────────────────────────────────────────────── */
+html.light {
+  color-scheme: light;
+
+  /* Invert the slate scale: dark values → light equivalents */
+  --color-slate-950: oklch(0.984 0.003 247.858);   /* slate-50  → body bg   */
+  --color-slate-900: oklch(0.968 0.007 247.896);   /* slate-100 → panels    */
+  --color-slate-800: oklch(0.929 0.013 255.508);   /* slate-200 → inputs    */
+  --color-slate-700: oklch(0.869 0.022 252.894);   /* slate-300 → borders   */
+  --color-slate-600: oklch(0.704 0.04  256.788);   /* slate-400 → muted     */
+  --color-slate-500: oklch(0.554 0.046 257.417);   /* stays     → secondary */
+  --color-slate-400: oklch(0.446 0.043 257.281);   /* slate-600 → body text */
+  --color-slate-300: oklch(0.372 0.044 257.287);   /* slate-700 → headings  */
+  --color-slate-200: oklch(0.279 0.041 260.031);   /* slate-800 → strong    */
+  --color-slate-100: oklch(0.208 0.042 265.755);   /* slate-900 → primary   */
 }
 
 @layer utilities {
@@ -64,5 +86,27 @@
 
   .zoom-in-95 {
     animation-name: zoom-in-95;
+  }
+
+  .app-shell-bg {
+    background-color: var(--color-slate-950);
+    background-image:
+      radial-gradient(ellipse 80% 50% at 50% -20%, oklch(0.45 0.15 285 / 0.12), transparent),
+      radial-gradient(ellipse 60% 40% at 100% 0%, oklch(0.4 0.12 265 / 0.08), transparent);
+  }
+
+  .panel-elevated {
+    background: oklch(0.18 0.02 265 / 0.75);
+    border: 1px solid oklch(0.35 0.03 265 / 0.45);
+    box-shadow:
+      0 1px 0 oklch(1 0 0 / 0.04) inset,
+      0 8px 32px oklch(0 0 0 / 0.25);
+    backdrop-filter: blur(16px);
+  }
+
+  html.light .panel-elevated {
+    background: oklch(1 0 0 / 0.9);
+    border-color: oklch(0.88 0.02 265);
+    box-shadow: 0 4px 24px oklch(0.2 0.05 265 / 0.08);
   }
 }

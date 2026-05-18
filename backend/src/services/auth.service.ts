@@ -1,11 +1,19 @@
 import { User } from '../models/User';
 import { AppError } from '../middlewares/errorHandler';
 import { generateToken } from '../utils/jwt';
+import { env } from '../config/env';
 import { RegisterInput, LoginInput } from '../validations/auth.validation';
 import { IUser } from '../types';
 
 export class AuthService {
   async register(input: RegisterInput): Promise<{ user: IUser; token: string }> {
+    if (input.role === 'admin' && !env.ALLOW_ADMIN_REGISTRATION) {
+      throw new AppError(
+        'Admin registration is disabled. Contact your administrator.',
+        403
+      );
+    }
+
     const existing = await User.findOne({ email: input.email });
     if (existing) {
       throw new AppError('Email already registered', 409);

@@ -3,12 +3,13 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import {
   LayoutDashboard,
   LogOut,
-  Zap,
   Menu,
   X,
   ChevronRight,
 } from 'lucide-react';
 import { useAuthStore } from '@/store/authStore';
+import BrandLogo from '@/components/brand/BrandLogo';
+import { ROLE_LABELS } from '@/constants';
 
 interface NavItem {
   label: string;
@@ -35,13 +36,16 @@ const Sidebar: React.FC = () => {
     <div className="flex flex-col h-full">
       {/* Logo */}
       <div className={`flex items-center gap-3 p-6 border-b border-slate-700/50 ${isCollapsed ? 'justify-center px-4' : ''}`}>
-        <div className="w-8 h-8 bg-gradient-to-br from-violet-600 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-violet-500/20 flex-shrink-0">
-          <Zap className="w-4 h-4 text-white" />
-        </div>
-        {!isCollapsed && (
-          <div>
-            <span className="font-bold text-slate-100 text-sm">Smart Leads</span>
-            <p className="text-xs text-slate-500 capitalize">{user?.role} Panel</p>
+        {isCollapsed ? (
+          <BrandLogo size="sm" />
+        ) : (
+          <div className="min-w-0">
+            <BrandLogo size="sm" showTagline />
+            {user?.role && (
+              <p className="text-[11px] text-slate-500 mt-2 font-medium">
+                {ROLE_LABELS[user.role]} workspace
+              </p>
+            )}
           </div>
         )}
       </div>
@@ -55,7 +59,7 @@ const Sidebar: React.FC = () => {
             className={({ isActive }) =>
               `flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 group
               ${isActive
-                ? 'bg-violet-600/20 text-violet-400 border border-violet-500/20'
+                ? 'bg-red-600/20 text-red-400 border border-red-500/20'
                 : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60'
               }
               ${isCollapsed ? 'justify-center' : ''}
@@ -76,7 +80,7 @@ const Sidebar: React.FC = () => {
       <div className={`p-4 border-t border-slate-700/50 space-y-1 ${isCollapsed ? 'flex flex-col items-center' : ''}`}>
         {user && !isCollapsed && (
           <div className="flex items-center gap-3 px-3 py-2 mb-2">
-            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-violet-500 to-indigo-500 flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
+            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-red-500 to-red-600 flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
               {user.name[0].toUpperCase()}
             </div>
             <div className="min-w-0">
