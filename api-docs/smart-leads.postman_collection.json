@@ -1,0 +1,171 @@
+{
+  "info": {
+    "_postman_id": "smart-leads-api",
+    "name": "Smart Leads Dashboard API",
+    "description": "Full API documentation for the Smart Leads Dashboard. Base URL: http://localhost:5000/api",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Health",
+      "item": [
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "url": "http://localhost:5000/health",
+            "description": "Returns server health status"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register User",
+          "request": {
+            "method": "POST",
+            "url": "http://localhost:5000/api/auth/register",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Admin User\",\n  \"email\": \"admin@example.com\",\n  \"password\": \"admin123\",\n  \"role\": \"admin\"\n}"
+            },
+            "description": "Register a new user. Role defaults to 'sales' if omitted."
+          },
+          "response": {
+            "example": "{\n  \"success\": true,\n  \"message\": \"Registration successful\",\n  \"data\": {\n    \"user\": { \"_id\": \"...\", \"name\": \"Admin User\", \"email\": \"admin@example.com\", \"role\": \"admin\" },\n    \"token\": \"eyJhbGci...\"\n  }\n}"
+          }
+        },
+        {
+          "name": "Login User",
+          "request": {
+            "method": "POST",
+            "url": "http://localhost:5000/api/auth/login",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@example.com\",\n  \"password\": \"admin123\"\n}"
+            },
+            "description": "Authenticate user and receive JWT token."
+          }
+        },
+        {
+          "name": "Get Current User",
+          "request": {
+            "method": "GET",
+            "url": "http://localhost:5000/api/auth/me",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "description": "Returns the currently authenticated user's profile."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Leads",
+      "item": [
+        {
+          "name": "Get All Leads (with filters)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:5000/api/leads?page=1&limit=10&status=new&source=website&search=rahul&sort=latest",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["api", "leads"],
+              "query": [
+                { "key": "page", "value": "1", "description": "Page number (default: 1)" },
+                { "key": "limit", "value": "10", "description": "Records per page (default: 10, max: 100)" },
+                { "key": "status", "value": "new", "description": "Filter: new | contacted | qualified | lost" },
+                { "key": "source", "value": "website", "description": "Filter: website | instagram | referral" },
+                { "key": "search", "value": "rahul", "description": "Search by name or email (debounced on FE)" },
+                { "key": "sort", "value": "latest", "description": "Sort: latest | oldest" }
+              ]
+            },
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "description": "Fetch paginated leads. All query params are optional and composable."
+          },
+          "response": {
+            "example": "{\n  \"success\": true,\n  \"message\": \"Leads fetched successfully\",\n  \"data\": [...],\n  \"pagination\": {\n    \"currentPage\": 1,\n    \"totalPages\": 5,\n    \"totalRecords\": 50,\n    \"hasNextPage\": true,\n    \"hasPrevPage\": false\n  }\n}"
+          }
+        },
+        {
+          "name": "Get Lead Stats",
+          "request": {
+            "method": "GET",
+            "url": "http://localhost:5000/api/leads/stats",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "description": "Returns total leads and breakdown by status and source."
+          }
+        },
+        {
+          "name": "Export Leads CSV (Admin only)",
+          "request": {
+            "method": "GET",
+            "url": "http://localhost:5000/api/leads/export/csv?status=qualified&source=instagram",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "description": "Downloads a CSV file of leads matching the given filters. Admin role required."
+          }
+        },
+        {
+          "name": "Get Single Lead",
+          "request": {
+            "method": "GET",
+            "url": "http://localhost:5000/api/leads/:id",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "description": "Fetch a single lead by its MongoDB ObjectId."
+          }
+        },
+        {
+          "name": "Create Lead",
+          "request": {
+            "method": "POST",
+            "url": "http://localhost:5000/api/leads",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Rahul Sharma\",\n  \"email\": \"rahul@example.com\",\n  \"status\": \"new\",\n  \"source\": \"website\"\n}"
+            },
+            "description": "Create a new lead. createdBy is set automatically from the JWT token."
+          }
+        },
+        {
+          "name": "Update Lead",
+          "request": {
+            "method": "PUT",
+            "url": "http://localhost:5000/api/leads/:id",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"qualified\",\n  \"source\": \"referral\"\n}"
+            },
+            "description": "Update any lead field. All fields are optional (partial update)."
+          }
+        },
+        {
+          "name": "Delete Lead (Admin only)",
+          "request": {
+            "method": "DELETE",
+            "url": "http://localhost:5000/api/leads/:id",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "description": "Permanently delete a lead. Admin role required — returns 403 for sales users."
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "token",
+      "value": "paste-your-jwt-token-here",
+      "description": "JWT token received from /api/auth/login"
+    }
+  ]
+}
