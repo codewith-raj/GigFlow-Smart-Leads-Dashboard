@@ -5,11 +5,16 @@ import { Document, Types } from 'mongoose';
 
 export type UserRole = 'admin' | 'sales';
 
+export type AuthProvider = 'local' | 'google';
+
 export interface IUser extends Document {
   _id: Types.ObjectId;
   name: string;
   email: string;
-  password: string;
+  password?: string;
+  googleId?: string;
+  avatar?: string;
+  authProvider: AuthProvider;
   role: UserRole;
   createdAt: Date;
   updatedAt: Date;

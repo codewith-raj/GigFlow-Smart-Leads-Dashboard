@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Eye, EyeOff, Mail, Lock } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { authApi } from '@/api/auth.api';
 import { useAuthStore } from '@/store/authStore';
 import AuthLayout from '@/layouts/AuthLayout';
-import Input from '@/components/ui/Input';
-import Button from '@/components/ui/Button';
+import AuthOutlinedInput from '@/components/auth/AuthOutlinedInput';
+import AuthDivider from '@/components/auth/AuthDivider';
+import AuthSocialButtons from '@/components/auth/AuthSocialButtons';
+import PasswordVisibilityToggle from '@/components/ui/PasswordVisibilityToggle';
 import { getApiErrorMessage } from '@/utils/errors';
 
 const loginSchema = z.object({
@@ -47,63 +48,61 @@ const LoginPage: React.FC = () => {
 
   return (
     <AuthLayout
-      title="Welcome back"
-      subtitle="Sign in to manage your lead pipeline"
+      variant="login"
+      title="Sign In"
+      subtitle="Use your email or continue with Google."
+      footerText="Don't have an account?"
+      footerLinkText="Create one"
+      footerLinkTo="/register"
     >
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" id="login-form">
-        <Input
-          label="Email Address"
+      <AuthSocialButtons mode="login" />
+
+      <AuthDivider label="or sign in with email" />
+
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-5" id="login-form">
+        <AuthOutlinedInput
+          label="Email"
           type="email"
-          placeholder="you@company.com"
           id="login-email"
-          leftIcon={<Mail className="w-4 h-4" />}
-          error={errors.email?.message}
           autoComplete="email"
+          error={errors.email?.message}
+          inputClassName="auth-input-login"
           {...register('email')}
         />
 
-        <Input
+        <AuthOutlinedInput
           label="Password"
           type={showPassword ? 'text' : 'password'}
-          placeholder="Enter your password"
           id="login-password"
-          leftIcon={<Lock className="w-4 h-4" />}
-          rightIcon={
-            <button
-              type="button"
-              onClick={() => setShowPassword(!showPassword)}
-              className="hover:text-slate-200 transition-colors"
-              aria-label={showPassword ? 'Hide password' : 'Show password'}
-            >
-              {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-            </button>
-          }
-          error={errors.password?.message}
           autoComplete="current-password"
+          error={errors.password?.message}
+          inputClassName="auth-input-login"
+          rightElement={
+            <PasswordVisibilityToggle
+              visible={showPassword}
+              onToggle={() => setShowPassword(!showPassword)}
+              id="login-password-toggle"
+            />
+          }
           {...register('password')}
         />
 
-        <Button
+        <button
           type="submit"
-          variant="primary"
-          size="lg"
-          isLoading={isSubmitting}
-          className="w-full mt-6"
+          disabled={isSubmitting}
           id="login-submit"
+          className="
+            w-full py-3.5 px-6 rounded-xl text-sm font-semibold
+            text-slate-950 bg-gradient-to-r from-sky-100 via-white to-sky-50
+            hover:from-white hover:to-sky-100
+            disabled:opacity-60 disabled:cursor-not-allowed
+            transition-all duration-300 hover:shadow-lg hover:shadow-sky-500/20
+            active:scale-[0.98] auth-cta-login
+          "
         >
-          Sign In
-        </Button>
+          {isSubmitting ? 'Signing in...' : 'Sign In'}
+        </button>
       </form>
-
-      <p className="text-center text-sm text-slate-400 mt-6 pt-6 border-t border-slate-700/40">
-        Don&apos;t have an account?{' '}
-        <Link
-          to="/register"
-          className="text-violet-400 hover:text-violet-300 font-medium transition-colors"
-        >
-          Create account
-        </Link>
-      </p>
     </AuthLayout>
   );
 };

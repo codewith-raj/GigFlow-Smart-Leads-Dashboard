@@ -10,6 +10,7 @@ interface EnvConfig {
   NODE_ENV: string;
   FRONTEND_URL: string;
   ALLOW_ADMIN_REGISTRATION: boolean;
+  GOOGLE_CLIENT_ID: string;
 }
 
 const getEnvVar = (key: string, defaultValue?: string): string => {
@@ -29,4 +30,5 @@ export const env: EnvConfig = {
   FRONTEND_URL: getEnvVar('FRONTEND_URL', 'http://localhost:5173'),
   ALLOW_ADMIN_REGISTRATION:
     getEnvVar('ALLOW_ADMIN_REGISTRATION', 'true').toLowerCase() === 'true',
+  GOOGLE_CLIENT_ID: getEnvVar('GOOGLE_CLIENT_ID', ''),
 };

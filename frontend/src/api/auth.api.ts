@@ -12,6 +12,17 @@ export const authApi = {
     return res.data;
   },
 
+  googleAuth: async (data: {
+    credential: string;
+    role?: 'admin' | 'sales';
+  }): Promise<ApiResponse<AuthUser & { isNewUser: boolean }>> => {
+    const res = await axiosInstance.post<ApiResponse<AuthUser & { isNewUser: boolean }>>(
+      '/auth/google',
+      data
+    );
+    return res.data;
+  },
+
   getMe: async (): Promise<ApiResponse<{ user: User }>> => {
     const res = await axiosInstance.get<ApiResponse<{ user: User }>>('/auth/me');
     return res.data;

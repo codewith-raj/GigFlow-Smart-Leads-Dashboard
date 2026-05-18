@@ -1,7 +1,9 @@
 import React, { Suspense } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 import { Toaster } from 'react-hot-toast';
+import { GOOGLE_CLIENT_ID, isGoogleAuthConfigured } from '@/constants/google';
 import ProtectedRoute from '@/routes/ProtectedRoute';
 import PublicRoute from '@/routes/PublicRoute';
 import DashboardLayout from '@/layouts/DashboardLayout';
@@ -22,10 +24,8 @@ const queryClient = new QueryClient({
   },
 });
 
-const App: React.FC = () => {
-  return (
-    <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
+const AppShell: React.FC = () => (
+  <BrowserRouter>
         <Suspense fallback={<Loader fullscreen />}>
           <Routes>
             {/* Redirect root to dashboard */}
@@ -49,9 +49,13 @@ const App: React.FC = () => {
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </Suspense>
-      </BrowserRouter>
+  </BrowserRouter>
+);
 
-      {/* Global Toast Notifications */}
+const App: React.FC = () => {
+  const content = (
+    <QueryClientProvider client={queryClient}>
+      <AppShell />
       <Toaster
         position="top-right"
         toastOptions={{
@@ -72,6 +76,16 @@ const App: React.FC = () => {
         }}
       />
     </QueryClientProvider>
+  );
+
+  if (!isGoogleAuthConfigured) {
+    return content;
+  }
+
+  return (
+    <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
+      {content}
+    </GoogleOAuthProvider>
   );
 };
 
