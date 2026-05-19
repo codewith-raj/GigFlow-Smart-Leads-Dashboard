@@ -34,7 +34,6 @@ const Sidebar: React.FC = () => {
 
   const sidebarContent = (
     <div className="flex flex-col h-full">
-      {/* Logo */}
       <div className={`flex items-center gap-3 p-6 border-b border-slate-700/50 ${isCollapsed ? 'justify-center px-4' : ''}`}>
         {isCollapsed ? (
           <BrandLogo size="sm" />
@@ -50,7 +49,6 @@ const Sidebar: React.FC = () => {
         )}
       </div>
 
-      {/* Navigation */}
       <nav className="flex-1 p-4 space-y-1" aria-label="Main navigation">
         {navItems.map(({ label, path, icon: Icon }) => (
           <NavLink
@@ -76,7 +74,6 @@ const Sidebar: React.FC = () => {
         ))}
       </nav>
 
-      {/* User section */}
       <div className={`p-4 border-t border-slate-700/50 space-y-1 ${isCollapsed ? 'flex flex-col items-center' : ''}`}>
         {user && !isCollapsed && (
           <div className="flex items-center gap-3 px-3 py-2 mb-2">
@@ -103,7 +100,6 @@ const Sidebar: React.FC = () => {
 
   return (
     <>
-      {/* Mobile overlay */}
       {isMobileOpen && (
         <div
           className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 lg:hidden"
@@ -111,7 +107,6 @@ const Sidebar: React.FC = () => {
         />
       )}
 
-      {/* Mobile toggle button */}
       <button
         onClick={() => setIsMobileOpen(!isMobileOpen)}
         className="fixed top-4 left-4 z-50 p-2 rounded-xl bg-slate-800 border border-slate-700 text-slate-400 hover:text-slate-200 lg:hidden"
@@ -120,7 +115,6 @@ const Sidebar: React.FC = () => {
         {isMobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
       </button>
 
-      {/* Desktop sidebar */}
       <aside
         className={`
           hidden lg:flex flex-col
@@ -130,7 +124,6 @@ const Sidebar: React.FC = () => {
           ${isCollapsed ? 'w-16' : 'w-60'}
         `}
       >
-        {/* Collapse toggle */}
         <button
           onClick={() => setIsCollapsed(!isCollapsed)}
           className="absolute -right-3 top-20 w-6 h-6 rounded-full bg-slate-800 border border-slate-700 text-slate-400 hover:text-slate-200 flex items-center justify-center shadow-md z-10"
@@ -141,7 +134,6 @@ const Sidebar: React.FC = () => {
         {sidebarContent}
       </aside>
 
-      {/* Mobile sidebar */}
       <aside
         className={`
           fixed left-0 top-0 z-50 lg:hidden

@@ -14,7 +14,6 @@ const AuthBackground: React.FC = () => (
       className="auth-orb-1 absolute bottom-0 left-1/3 w-[300px] h-[300px] rounded-full bg-orange-500/8 blur-[80px]"
       style={{ animationDelay: '-4s' }}
     />
-    {/* Subtle grid */}
     <div
       className="absolute inset-0 opacity-[0.03]"
       style={{

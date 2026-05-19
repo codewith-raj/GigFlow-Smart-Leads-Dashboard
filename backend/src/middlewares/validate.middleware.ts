@@ -13,7 +13,6 @@ export const validate =
       return;
     }
 
-    // Replace with parsed (coerced/transformed) data
     req[target] = result.data;
     next();
   };

@@ -31,13 +31,11 @@ const PasswordVisibilityToggle: React.FC<PasswordVisibilityToggleProps> = ({
         ${pressed ? 'scale-90' : 'scale-100 hover:scale-105'}
       `}
     >
-      {/* Rotating conic gradient ring */}
       <span
         className="password-eye-ring absolute inset-0 rounded-xl opacity-70 group-hover:opacity-100 transition-opacity"
         aria-hidden
       />
 
-      {/* Inner glass panel */}
       <span
         className={`
           absolute inset-[2px] rounded-[10px] backdrop-blur-sm transition-all duration-300
@@ -51,12 +49,10 @@ const PasswordVisibilityToggle: React.FC<PasswordVisibilityToggleProps> = ({
         aria-hidden
       />
 
-      {/* Scan line */}
       <span className="password-eye-scan absolute inset-[3px] rounded-[9px] overflow-hidden pointer-events-none" aria-hidden>
         <span className="password-eye-scan-line absolute left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-red-400/80 to-transparent" />
       </span>
 
-      {/* Icon — custom futuristic eye */}
       <span className="relative z-10 w-[16px] h-[16px]" aria-hidden>
         <svg
           viewBox="0 0 24 24"
@@ -65,7 +61,6 @@ const PasswordVisibilityToggle: React.FC<PasswordVisibilityToggleProps> = ({
             visible ? 'text-red-400' : 'text-slate-400 group-hover:text-slate-200'
           }`}
         >
-          {/* Eye outline */}
           <path
             d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"
             className="password-eye-outline"
@@ -74,7 +69,6 @@ const PasswordVisibilityToggle: React.FC<PasswordVisibilityToggleProps> = ({
             strokeLinecap="round"
             strokeLinejoin="round"
           />
-          {/* Iris / pupil */}
           <circle
             cx="12"
             cy="12"
@@ -91,7 +85,6 @@ const PasswordVisibilityToggle: React.FC<PasswordVisibilityToggleProps> = ({
             fill="white"
             fillOpacity="0.9"
           />
-          {/* Slash when hidden */}
           <path
             d="M4 4l16 16"
             className={`password-eye-slash transition-all duration-300 origin-center ${
@@ -104,7 +97,6 @@ const PasswordVisibilityToggle: React.FC<PasswordVisibilityToggleProps> = ({
         </svg>
       </span>
 
-      {/* Status dot */}
       <span
         className={`
           absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full border border-slate-900 transition-all duration-300

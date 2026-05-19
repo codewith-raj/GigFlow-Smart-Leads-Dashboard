@@ -1,4 +1,3 @@
-// ─── User Types ────────────────────────────────────────────────────────────────
 
 export type UserRole = 'admin' | 'sales';
 
@@ -10,8 +9,6 @@ export interface User {
   createdAt: string;
   updatedAt: string;
 }
-
-// ─── Lead Types ────────────────────────────────────────────────────────────────
 
 export type LeadStatus = 'new' | 'contacted' | 'qualified' | 'lost';
 export type LeadSource = 'website' | 'instagram' | 'referral';
@@ -26,8 +23,6 @@ export interface Lead {
   createdAt: string;
   updatedAt: string;
 }
-
-// ─── API Types ────────────────────────────────────────────────────────────────
 
 export interface PaginationMeta {
   currentPage: number;
@@ -44,14 +39,10 @@ export interface ApiResponse<T = unknown> {
   pagination?: PaginationMeta;
 }
 
-// ─── Auth Types ────────────────────────────────────────────────────────────────
-
 export interface AuthUser {
   user: User;
   token: string;
 }
-
-// ─── Filter Types ──────────────────────────────────────────────────────────────
 
 export interface LeadFilters {
   page: number;
@@ -61,8 +52,6 @@ export interface LeadFilters {
   search?: string;
   sort: 'latest' | 'oldest';
 }
-
-// ─── Form Types ────────────────────────────────────────────────────────────────
 
 export interface RegisterForm {
   name: string;
@@ -82,8 +71,6 @@ export interface LeadForm {
   status: LeadStatus;
   source: LeadSource;
 }
-
-// ─── Stats Types ──────────────────────────────────────────────────────────────
 
 export interface LeadStats {
   total: number;

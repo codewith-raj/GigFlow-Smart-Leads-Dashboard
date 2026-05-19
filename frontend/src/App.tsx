@@ -28,16 +28,13 @@ const AppShell: React.FC = () => (
   <BrowserRouter>
         <Suspense fallback={<Loader fullscreen />}>
           <Routes>
-            {/* Redirect root to dashboard */}
             <Route path="/" element={<Navigate to="/dashboard" replace />} />
 
-            {/* Public routes (redirect if authenticated) */}
             <Route element={<PublicRoute />}>
               <Route path="/login" element={<LoginPage />} />
               <Route path="/register" element={<RegisterPage />} />
             </Route>
 
-            {/* Protected routes */}
             <Route element={<ProtectedRoute />}>
               <Route element={<DashboardLayout />}>
                 <Route path="/dashboard" element={<DashboardPage />} />
@@ -45,7 +42,6 @@ const AppShell: React.FC = () => (
               </Route>
             </Route>
 
-            {/* 404 catch-all */}
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </Suspense>

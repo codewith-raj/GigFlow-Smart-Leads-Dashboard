@@ -1,4 +1,4 @@
-import './config/env'; // Validate env vars first
+import './config/env';
 import connectDB from './config/db';
 import createApp from './app';
 import { env } from './config/env';
@@ -13,7 +13,6 @@ const startServer = async (): Promise<void> => {
     console.log(`📖 Health check: http://localhost:${env.PORT}/health`);
   });
 
-  // Graceful shutdown handlers
   const gracefulShutdown = (signal: string) => {
     console.log(`\n${signal} received. Shutting down gracefully...`);
     server.close(() => {

@@ -58,14 +58,12 @@ const UserSchema = new Schema<IUser>(
   }
 );
 
-// Hash password before saving — using async function to get proper this binding
 UserSchema.pre<HydratedDocument<IUser>>('save', async function () {
   if (!this.isModified('password') || !this.password) return;
   const salt = await bcrypt.genSalt(12);
   this.password = await bcrypt.hash(this.password, salt);
 });
 
-// Instance method to compare passwords
 UserSchema.methods['comparePassword'] = async function (
   this: { password?: string },
   candidatePassword: string

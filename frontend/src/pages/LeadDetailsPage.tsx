@@ -54,7 +54,6 @@ const LeadDetailsPage: React.FC = () => {
 
   return (
     <div className="max-w-2xl mx-auto space-y-6">
-      {/* Back button */}
       <Button
         variant="ghost"
         size="sm"
@@ -64,9 +63,7 @@ const LeadDetailsPage: React.FC = () => {
         Back to Dashboard
       </Button>
 
-      {/* Lead Card */}
       <div className="panel-elevated rounded-2xl overflow-hidden">
-        {/* Header */}
         <div className="bg-gradient-to-r from-violet-600/10 to-indigo-600/10 border-b border-slate-700/40 p-6">
           <div className="flex items-start gap-4">
             <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-violet-500 to-indigo-500 flex items-center justify-center text-white text-xl font-bold shadow-lg flex-shrink-0">
@@ -89,7 +86,6 @@ const LeadDetailsPage: React.FC = () => {
           </div>
         </div>
 
-        {/* Details */}
         <div className="p-6">
           <DetailRow
             icon={<Mail className="w-4 h-4" />}

@@ -10,13 +10,10 @@ import {
 
 const router = Router();
 
-// All lead routes require authentication
 router.use(authenticate);
 
-// Stats route (before /:id to avoid conflict)
 router.get('/stats', leadController.getStats.bind(leadController));
 
-// Export CSV — admin only
 router.get(
   '/export/csv',
   authorize('admin'),
@@ -24,7 +21,6 @@ router.get(
   leadController.exportCsv.bind(leadController)
 );
 
-// CRUD routes
 router.get(
   '/',
   validate(leadQuerySchema, 'query'),
@@ -45,7 +41,6 @@ router.put(
   leadController.updateLead.bind(leadController)
 );
 
-// Delete — admin only (RBAC)
 router.delete(
   '/:id',
   authorize('admin'),

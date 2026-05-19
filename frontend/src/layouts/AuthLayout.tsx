@@ -45,7 +45,6 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({
 
   return (
     <div className="min-h-screen min-h-[100dvh] flex flex-col lg:flex-row bg-slate-950 overflow-hidden">
-      {/* Left — variant gradient + illustration */}
       <aside
         className={`
           auth-panel-aside relative flex flex-col justify-between
@@ -100,7 +99,6 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({
         </p>
       </aside>
 
-      {/* Right — form panel */}
       <main
         className={`
           flex-1 flex items-center justify-center px-5 sm:px-8 lg:px-12 xl:px-16 py-10 lg:py-12

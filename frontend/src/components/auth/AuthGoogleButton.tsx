@@ -98,7 +98,6 @@ const AuthGoogleButton: React.FC<AuthGoogleButtonProps> = ({
         </div>
       )}
 
-      {/* Custom-styled shell; official Google button rendered inside */}
       <div
         className={`
           flex items-center justify-center min-h-[48px] rounded-xl border transition-all duration-300

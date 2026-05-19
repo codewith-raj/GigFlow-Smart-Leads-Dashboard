@@ -9,11 +9,6 @@ export interface PaginatedLeads {
   pagination: PaginationMeta;
 }
 
-/**
- * Typed MongoDB filter for leads.
- * Uses discriminated union fields — avoids `any` while staying compatible
- * with Mongoose's flexible find() signature.
- */
 interface LeadFilter {
   status?: LeadStatus;
   source?: LeadSource;

@@ -14,7 +14,6 @@ export const useThemeStore = create<ThemeState>()(
       toggleTheme: () =>
         set((state) => {
           const next = !state.isDark;
-          // Apply/remove 'light' class immediately on toggle
           if (next) {
             document.documentElement.classList.remove('light');
           } else {

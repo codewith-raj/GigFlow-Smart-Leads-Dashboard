@@ -38,9 +38,7 @@ const LeadSchema = new Schema<ILead>(
   }
 );
 
-// Index for text search on name and email
 LeadSchema.index({ name: 'text', email: 'text' });
-// Compound index for common filter combinations
 LeadSchema.index({ status: 1, source: 1, createdAt: -1 });
 
 export const Lead = mongoose.model<ILead>('Lead', LeadSchema);

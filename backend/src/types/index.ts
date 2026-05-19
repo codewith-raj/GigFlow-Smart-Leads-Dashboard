@@ -1,8 +1,6 @@
 import { Request } from 'express';
 import { Document, Types } from 'mongoose';
 
-// ─── User Types ────────────────────────────────────────────────────────────────
-
 export type UserRole = 'admin' | 'sales';
 
 export type AuthProvider = 'local' | 'google';
@@ -21,8 +19,6 @@ export interface IUser extends Document {
   comparePassword(candidatePassword: string): Promise<boolean>;
 }
 
-// ─── Lead Types ────────────────────────────────────────────────────────────────
-
 export type LeadStatus = 'new' | 'contacted' | 'qualified' | 'lost';
 export type LeadSource = 'website' | 'instagram' | 'referral';
 
@@ -37,8 +33,6 @@ export interface ILead extends Document {
   updatedAt: Date;
 }
 
-// ─── Auth Types ────────────────────────────────────────────────────────────────
-
 export interface JwtPayload {
   userId: string;
   email: string;
@@ -50,8 +44,6 @@ export interface JwtPayload {
 export interface AuthenticatedRequest extends Request {
   user?: JwtPayload;
 }
-
-// ─── API Response Types ────────────────────────────────────────────────────────
 
 export interface PaginationMeta {
   currentPage: number;
@@ -67,8 +59,6 @@ export interface ApiResponse<T = unknown> {
   data?: T;
   pagination?: PaginationMeta;
 }
-
-// ─── Query Filter Types ────────────────────────────────────────────────────────
 
 export interface LeadQueryFilters {
   page?: number;

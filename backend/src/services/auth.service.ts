@@ -27,7 +27,6 @@ export class AuthService {
   }
 
   async login(input: LoginInput): Promise<{ user: IUser; token: string }> {
-    // Explicitly select password since it's excluded by default
     const user = await User.findOne({ email: input.email }).select('+password');
 
     if (!user) {

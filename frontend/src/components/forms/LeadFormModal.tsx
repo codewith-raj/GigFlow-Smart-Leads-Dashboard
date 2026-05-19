@@ -49,7 +49,6 @@ const LeadFormModal: React.FC<LeadFormModalProps> = ({ isOpen, onClose, lead }) 
     },
   });
 
-  // Populate form when editing
   useEffect(() => {
     if (lead) {
       reset({
