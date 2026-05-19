@@ -7,6 +7,8 @@ build/
 .env
 .env.local
 .env.production
+backend/env.production.txt
+frontend/.env.production
 
 # Logs
 *.log

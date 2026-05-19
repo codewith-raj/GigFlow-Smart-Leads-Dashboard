@@ -25,13 +25,17 @@ services:
     restart: unless-stopped
     ports:
       - '5000:5000'
+    env_file:
+      - ./backend/.env
     environment:
       - NODE_ENV=production
       - PORT=5000
       - MONGODB_URI=mongodb://mongo:27017/gigflow-smart-leads
       - JWT_SECRET=${JWT_SECRET:-change-this-in-production-at-least-32-chars}
-      - JWT_EXPIRES_IN=7d
-      - FRONTEND_URL=http://localhost:80
+      - JWT_EXPIRES_IN=${JWT_EXPIRES_IN:-7d}
+      - FRONTEND_URL=${FRONTEND_URL:-http://localhost:80}
+      - ALLOW_ADMIN_REGISTRATION=${ALLOW_ADMIN_REGISTRATION:-true}
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID:-}
     depends_on:
       mongo:
         condition: service_healthy
