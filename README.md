@@ -47,7 +47,7 @@
 
 ### Leads Management
 - ✅ Full CRUD (Create, Read, Update, Delete)
-- ✅ Lead fields: name, email, status, source, createdBy, timestamps
+- ✅ Lead fields: name, email, status, source, createdBy, timestamps.
 - ✅ Status: `new` | `contacted` | `qualified` | `lost`
 - ✅ Source: `website` | `instagram` | `referral`
 
