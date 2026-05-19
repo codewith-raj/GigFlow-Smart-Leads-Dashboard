@@ -8,7 +8,8 @@ FROM node:20-alpine AS builder
 WORKDIR /app
 
 COPY backend/package*.json ./
-RUN npm ci --only=production
+# Install ALL deps (including devDeps — tsc lives here)
+RUN npm ci
 
 COPY backend/ .
 RUN npm run build
@@ -20,9 +21,11 @@ RUN addgroup -S appgroup && adduser -S appuser -G appgroup
 
 WORKDIR /app
 
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/dist ./dist
 COPY backend/package*.json ./
+# Install only production deps in the final image
+RUN npm ci --omit=dev
+
+COPY --from=builder /app/dist ./dist
 
 USER appuser
 
