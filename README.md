@@ -62,7 +62,7 @@
 ### Pagination
 - ✅ Server-side pagination (10 per page)
 - ✅ Smart ellipsis pagination UI
-- ✅ Full pagination metadata in API response
+- ✅ Full pagination metadata in API response..
 
 ### Additional
 - ✅ CSV Export (admin-only, filter-aware)
