@@ -9,6 +9,16 @@ export const APP_TAGLINE =
 
 export const API_BASE_URL = import.meta.env.VITE_API_URL ?? '/api';
 
+if (import.meta.env.PROD && typeof window !== 'undefined') {
+  const host = window.location.hostname;
+  const isLocalHost = host === 'localhost' || host === '127.0.0.1';
+  if (!isLocalHost && API_BASE_URL.startsWith('/')) {
+    console.warn(
+      '[GigFlow] VITE_API_URL is relative in production. Set it in Vercel to https://<your-render-app>.onrender.com/api'
+    );
+  }
+}
+
 export const ROLE_LABELS: Record<'admin' | 'sales', string> = {
   admin: 'Admin',
   sales: 'Sales User',

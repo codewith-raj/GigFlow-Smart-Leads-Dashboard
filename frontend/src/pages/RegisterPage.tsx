@@ -48,11 +48,13 @@ const RegisterPage: React.FC = () => {
       const res = await authApi.register(data);
       if (res.data) {
         setAuth(res.data.user, res.data.token);
-        toast.success(`Welcome aboard, ${res.data.user.name}!`);
+        toast.success(`Welcome aboard, ${res.data.user.name}!`, { id: 'register-success' });
         navigate('/dashboard');
       }
     } catch (err: unknown) {
-      toast.error(getApiErrorMessage(err, 'Registration failed. Please try again.'));
+      toast.error(getApiErrorMessage(err, 'Registration failed. Please try again.'), {
+        id: 'register-error',
+      });
     }
   };
 

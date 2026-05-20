@@ -27,62 +27,34 @@ const queryClient = new QueryClient({
 });
 
 const AuthBootstrap: React.FC = () => {
-  const {
-    token,
-    user,
-    isAuthenticated,
-    isHydrated,
-    isCheckingAuth,
-    setAuth,
-    clearAuth,
-    setCheckingAuth,
-  } = useAuthStore();
+  const { token, user, isAuthenticated, isHydrated, setAuth, clearAuth } = useAuthStore();
 
   useEffect(() => {
-    if (!isHydrated || isCheckingAuth) {
-      return;
-    }
+    if (!isHydrated) return;
 
     if (!token) {
-      clearAuth();
+      if (isAuthenticated || user) clearAuth();
       return;
     }
 
-    if (user && isAuthenticated) {
-      return;
-    }
+    if (user && isAuthenticated) return;
 
-    let mounted = true;
-    setCheckingAuth(true);
-
+    let active = true;
     authApi
       .getMe()
       .then((res) => {
-        if (!mounted || !res.data) return;
+        if (!active || !res.data) return;
         setAuth(res.data.user, token);
       })
       .catch(() => {
-        if (!mounted) return;
+        if (!active) return;
         clearAuth();
-      })
-      .finally(() => {
-        if (!mounted) return;
-        setCheckingAuth(false);
       });
 
     return () => {
-      mounted = false;
+      active = false;
     };
-  }, [
-    token,
-    user,
-    isAuthenticated,
-    isHydrated,
-    isCheckingAuth,
-    setAuth,
-    clearAuth,
-    setCheckingAuth,
-  ]);
+  }, [token, user, isAuthenticated, isHydrated, setAuth, clearAuth]);
 
   return null;
 };

@@ -7,11 +7,9 @@ interface AuthState {
   token: string | null;
   isAuthenticated: boolean;
   isHydrated: boolean;
-  isCheckingAuth: boolean;
   setAuth: (user: User, token: string) => void;
   clearAuth: () => void;
   setHydrated: (value: boolean) => void;
-  setCheckingAuth: (value: boolean) => void;
 }
 
 export const useAuthStore = create<AuthState>()(
@@ -21,7 +19,6 @@ export const useAuthStore = create<AuthState>()(
       token: null,
       isAuthenticated: false,
       isHydrated: false,
-      isCheckingAuth: false,
 
       setAuth: (user: User, token: string) => {
         localStorage.setItem('token', token);
@@ -30,10 +27,9 @@ export const useAuthStore = create<AuthState>()(
 
       clearAuth: () => {
         localStorage.removeItem('token');
-        set({ user: null, token: null, isAuthenticated: false, isCheckingAuth: false });
+        set({ user: null, token: null, isAuthenticated: false });
       },
       setHydrated: (value: boolean) => set({ isHydrated: value }),
-      setCheckingAuth: (value: boolean) => set({ isCheckingAuth: value }),
     }),
     {
       name: 'auth-storage',

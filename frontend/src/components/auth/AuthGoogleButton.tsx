@@ -61,11 +61,13 @@ const AuthGoogleButton: React.FC<AuthGoogleButtonProps> = ({
       if (res.data) {
         setAuth(res.data.user, res.data.token);
         const greeting = res.data.isNewUser ? 'Welcome aboard' : 'Welcome back';
-        toast.success(`${greeting}, ${res.data.user.name}!`);
+        toast.success(`${greeting}, ${res.data.user.name}!`, { id: 'google-auth-success' });
         navigate('/dashboard');
       }
     } catch (err: unknown) {
-      toast.error(getApiErrorMessage(err, 'Google sign-in failed. Please try again.'));
+      toast.error(getApiErrorMessage(err, 'Google sign-in failed. Please try again.'), {
+        id: 'google-auth-error',
+      });
     } finally {
       setLoading(false);
     }

@@ -38,11 +38,11 @@ const LoginPage: React.FC = () => {
       const res = await authApi.login(data);
       if (res.data) {
         setAuth(res.data.user, res.data.token);
-        toast.success(`Welcome back, ${res.data.user.name}!`);
+        toast.success(`Welcome back, ${res.data.user.name}!`, { id: 'login-success' });
         navigate('/dashboard');
       }
     } catch (err: unknown) {
-      toast.error(getApiErrorMessage(err, 'Login failed. Please try again.'));
+      toast.error(getApiErrorMessage(err, 'Login failed. Please try again.'), { id: 'login-error' });
     }
   };
 

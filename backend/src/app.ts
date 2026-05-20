@@ -11,10 +11,34 @@ import leadRoutes from './routes/lead.routes';
 const createApp = (): Application => {
   const app = express();
 
-  app.use(helmet());
+  if (env.NODE_ENV === 'production') {
+    app.set('trust proxy', 1);
+  }
+
+  app.use(
+    helmet({
+      contentSecurityPolicy: env.NODE_ENV === 'production',
+      crossOriginOpenerPolicy: { policy: 'same-origin-allow-popups' },
+      crossOriginResourcePolicy: { policy: 'cross-origin' },
+    })
+  );
+
+  const allowed = new Set(env.allowedOrigins);
+
   app.use(
     cors({
-      origin: env.FRONTEND_URL,
+      origin: (origin, callback) => {
+        if (!origin) {
+          callback(null, true);
+          return;
+        }
+        const normalized = origin.replace(/\/$/, '');
+        if (allowed.has(normalized)) {
+          callback(null, origin);
+          return;
+        }
+        callback(null, false);
+      },
       credentials: true,
       methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
       allowedHeaders: ['Content-Type', 'Authorization'],

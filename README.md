@@ -2,6 +2,8 @@
 
 > **GigFlow-Smart-Leads-Dashboard** — Production-ready MERN lead management platform with JWT authentication, RBAC (Admin / Sales User), advanced filtering with debounced search, server-side pagination, CSV export, Docker, and dark mode.
 
+**Production deploy checklist:** see [DEPLOYMENT.md](./DEPLOYMENT.md).
+
 ---
 
 ## 📸 Screenshots
