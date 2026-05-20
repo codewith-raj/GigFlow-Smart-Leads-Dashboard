@@ -131,7 +131,7 @@ const Sidebar: React.FC = () => {
 
       <aside
         className={`
-          relative sticky top-0 hidden h-screen flex-shrink-0 flex-col border-r border-slate-700/50 bg-slate-900/95 backdrop-blur-xl transition-all duration-300 lg:flex
+          relative hidden flex-shrink-0 flex-col border-r border-slate-700/50 bg-slate-900/95 backdrop-blur-xl transition-all duration-300 lg:sticky lg:top-0 lg:flex lg:h-[100dvh] lg:max-h-screen
           ${isCollapsed ? 'w-16' : 'w-64 xl:w-72'}
         `}
       >

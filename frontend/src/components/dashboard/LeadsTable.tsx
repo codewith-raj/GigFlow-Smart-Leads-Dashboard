@@ -67,10 +67,10 @@ const LeadsTable: React.FC<LeadsTableProps> = ({
   };
 
   return (
-    <div className="-mx-1 scroll-fade-x overflow-x-auto rounded-xl border border-slate-700/40 sm:mx-0">
+    <div className="-mx-1 scroll-fade-x overflow-x-auto rounded-xl border border-slate-700/40 bg-slate-900/20 sm:mx-0">
       <table className="min-w-[640px] w-full text-sm" aria-label="Leads table">
         <thead>
-          <tr className="bg-slate-800/60 border-b border-slate-700/40">
+          <tr className="border-b border-slate-700/40 bg-slate-800/80">
             <th className="px-3 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-400 sm:px-4">
               Lead
             </th>

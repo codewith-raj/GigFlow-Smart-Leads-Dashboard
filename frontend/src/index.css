@@ -15,6 +15,9 @@
     -moz-osx-font-smoothing: grayscale;
     text-size-adjust: 100%;
     -webkit-text-size-adjust: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+    scroll-behavior: smooth;
   }
 
   body {
@@ -23,6 +26,13 @@
     background-color: var(--color-slate-950);
     color: var(--color-slate-100);
     margin: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+
+  #root {
+    min-height: 100dvh;
+    min-height: 100svh;
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -109,6 +119,50 @@ html.light {
       0 1px 0 oklch(1 0 0 / 0.04) inset,
       0 8px 32px oklch(0 0 0 / 0.25);
     backdrop-filter: blur(16px);
+  }
+
+  .panel-elevated-hover {
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+  }
+
+  .panel-elevated-hover:hover {
+    border-color: oklch(0.42 0.04 265 / 0.55);
+    box-shadow:
+      0 1px 0 oklch(1 0 0 / 0.05) inset,
+      0 12px 40px oklch(0 0 0 / 0.32);
+  }
+
+  .dashboard-page {
+    padding-bottom: max(5.5rem, calc(env(safe-area-inset-bottom, 0px) + 4.5rem));
+  }
+
+  .dashboard-section-title {
+    letter-spacing: 0.02em;
+  }
+
+  .stat-card-accent {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .stat-card-accent::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--stat-accent, oklch(0.65 0.2 25)), transparent);
+    opacity: 0.85;
+  }
+
+  .chart-surface-passive {
+    touch-action: pan-y;
+  }
+
+  .chart-surface-passive .recharts-wrapper,
+  .chart-surface-passive svg {
+    overflow: visible;
   }
 
   html.light .panel-elevated {

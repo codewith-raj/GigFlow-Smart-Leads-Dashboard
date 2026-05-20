@@ -29,7 +29,7 @@ const hasActiveFilters = (filters: Partial<LeadFilters>) =>
 
 const FiltersBar: React.FC<FiltersBarProps> = ({ filters, onChange, onReset }) => {
   return (
-    <div className="rounded-2xl border border-slate-700/40 bg-slate-900/40 p-4 sm:p-5">
+    <div className="rounded-xl border border-slate-700/35 bg-slate-800/25 p-4 sm:p-5">
       <div className="mb-3 flex items-center gap-2 text-slate-400">
         <Filter className="h-4 w-4 flex-shrink-0" />
         <span className="text-sm font-medium">Filters</span>

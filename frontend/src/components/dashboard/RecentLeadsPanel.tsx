@@ -28,15 +28,19 @@ const RecentLeadsPanel: React.FC<RecentLeadsPanelProps> = ({ leads, isLoading })
   const slice = leads.slice(0, 6);
 
   return (
-    <section className="panel-elevated flex h-full flex-col rounded-2xl border border-slate-700/40">
-      <div className="flex items-center justify-between border-b border-slate-700/40 px-4 py-3 sm:px-5">
+    <section className="panel-elevated panel-elevated-hover rounded-2xl border border-slate-700/40">
+      <div className="flex items-center justify-between border-b border-slate-700/40 px-4 py-3.5 sm:px-5">
         <div className="flex items-center gap-2">
-          <Sparkles className="h-4 w-4 text-amber-400" />
-          <h3 className="text-sm font-semibold text-slate-100 sm:text-base">In this view</h3>
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-500/10 text-amber-400">
+            <Sparkles className="h-4 w-4" />
+          </div>
+          <div>
+            <h3 className="text-sm font-semibold text-slate-100 sm:text-base">In this view</h3>
+            <p className="text-[11px] text-slate-500">Quick access from current page</p>
+          </div>
         </div>
-        <span className="text-xs text-slate-500">Latest on page</span>
       </div>
-      <div className="min-h-0 flex-1 overflow-y-auto p-2 sm:p-3">
+      <div className="p-2 sm:p-3">
         {isLoading ? (
           <ul className="space-y-2">
             {[1, 2, 3, 4].map((i) => (

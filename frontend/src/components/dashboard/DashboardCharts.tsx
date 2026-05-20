@@ -86,7 +86,7 @@ const DashboardCharts: React.FC<DashboardChartsProps> = ({ stats, isLoading }) =
 
   return (
     <div className="grid gap-4 lg:grid-cols-2 lg:gap-6">
-      <section className="panel-elevated rounded-2xl border border-slate-700/40 p-4 sm:p-5">
+      <section className="panel-elevated panel-elevated-hover rounded-2xl border border-slate-700/40 p-4 sm:p-5">
         <div className="mb-4 flex items-center gap-2">
           <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-violet-500/15 text-violet-400">
             <BarChart3 className="h-4 w-4" />
@@ -96,7 +96,7 @@ const DashboardCharts: React.FC<DashboardChartsProps> = ({ stats, isLoading }) =
             <p className="text-xs text-slate-500">Distribution across your pipeline stages</p>
           </div>
         </div>
-        <div className="h-[240px] w-full min-w-0 sm:h-[260px]">
+        <div className="chart-surface-passive h-[240px] w-full min-w-0 sm:h-[260px]">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={statusData} margin={{ top: 8, right: 8, left: -8, bottom: 0 }}>
               <CartesianGrid strokeDasharray="3 3" stroke={gridStroke} vertical={false} />
@@ -122,7 +122,7 @@ const DashboardCharts: React.FC<DashboardChartsProps> = ({ stats, isLoading }) =
         </div>
       </section>
 
-      <section className="panel-elevated rounded-2xl border border-slate-700/40 p-4 sm:p-5">
+      <section className="panel-elevated panel-elevated-hover rounded-2xl border border-slate-700/40 p-4 sm:p-5">
         <div className="mb-4 flex items-center gap-2">
           <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-red-500/15 text-red-400">
             <PieChartIcon className="h-4 w-4" />
@@ -132,7 +132,7 @@ const DashboardCharts: React.FC<DashboardChartsProps> = ({ stats, isLoading }) =
             <p className="text-xs text-slate-500">Where opportunities originate</p>
           </div>
         </div>
-        <div className="h-[240px] w-full min-w-0 sm:h-[260px]">
+        <div className="chart-surface-passive h-[240px] w-full min-w-0 sm:h-[260px]">
           <ResponsiveContainer width="100%" height="100%">
             <PieChart>
               <Pie
