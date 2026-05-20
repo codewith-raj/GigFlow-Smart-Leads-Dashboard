@@ -245,11 +245,11 @@ const DashboardPage: React.FC = () => {
       <section aria-labelledby="pipeline-heading">
         <div className="panel-elevated overflow-hidden rounded-2xl border border-slate-700/40">
           <div className="flex flex-col gap-3 border-b border-slate-700/40 bg-slate-900/30 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6 sm:py-5">
-            <div className="flex min-w-0 items-start gap-3">
-              <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-red-500/10 text-red-400">
+            <div className="flex min-w-0 items-start gap-3 pl-0.5 sm:gap-4 sm:pl-2">
+              <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-red-500/10 text-red-400 sm:ml-0.5">
                 <LayoutGrid className="h-5 w-5" />
               </div>
-              <div className="min-w-0">
+              <div className="min-w-0 pl-1 sm:pl-2">
                 <h2 id="pipeline-heading" className="text-base font-semibold tracking-tight text-slate-100 sm:text-lg">
                   Lead pipeline
                 </h2>
@@ -334,6 +334,9 @@ const DashboardPage: React.FC = () => {
           pageMatchCount: leads.length,
           totalMatching: pagination?.totalRecords ?? leads.length,
           userName: user?.name,
+          userRole: user?.role,
+          leads,
+          pagination,
         }}
       />
     </div>

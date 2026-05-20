@@ -1,103 +1,151 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { MessageCircle, X, Send, Sparkles } from 'lucide-react';
-import type { LeadStats, LeadFilters } from '@/types';
-import { STATUS_LABELS, SOURCE_LABELS } from '@/constants';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import {
+  MessageCircle,
+  X,
+  Send,
+  Bot,
+  Loader2,
+  Zap,
+  BarChart3,
+  Users,
+  Filter,
+  Target,
+} from 'lucide-react';
+import {
+  type CoachContext,
+  type CoachInsight,
+  type CoachReply,
+  buildWelcomeReply,
+  replyForMessage,
+} from './pipelineCoach.helpers';
 
-export interface CoachContext {
-  stats: LeadStats | undefined;
-  filters: Partial<LeadFilters>;
-  search: string;
-  pageMatchCount: number;
-  totalMatching: number;
-  userName?: string;
-}
+export type { CoachContext } from './pipelineCoach.helpers';
 
 interface Message {
   id: string;
   role: 'user' | 'assistant';
-  text: string;
+  reply?: CoachReply;
+  text?: string;
 }
 
 const quickPrompts = [
-  'What should I focus on today?',
-  'How is my pipeline?',
-  'Tips for qualified leads',
-  'Explain my filters',
+  { label: 'Focus today', icon: Target, prompt: 'What should I focus on today?' },
+  { label: 'Pipeline', icon: BarChart3, prompt: 'Pipeline breakdown' },
+  { label: 'Contacts', icon: Users, prompt: 'Who should I contact?' },
+  { label: 'Filters', icon: Filter, prompt: 'Explain my filters' },
+  { label: 'Qualified tips', icon: Zap, prompt: 'Tips for qualified leads' },
 ];
 
-function buildContextSummary(ctx: CoachContext): string {
-  const parts: string[] = [];
-  if (ctx.stats) {
-    parts.push(`Total leads: ${ctx.stats.total}.`);
-    const topStatus = Object.entries(ctx.stats.byStatus).sort((a, b) => b[1] - a[1])[0];
-    if (topStatus) parts.push(`Most common status: ${STATUS_LABELS[topStatus[0]] ?? topStatus[0]} (${topStatus[1]}).`);
-    const topSource = Object.entries(ctx.stats.bySource).sort((a, b) => b[1] - a[1])[0];
-    if (topSource) parts.push(`Top source: ${SOURCE_LABELS[topSource[0]] ?? topSource[0]} (${topSource[1]}).`);
-  }
-  parts.push(`This table view: ${ctx.pageMatchCount} leads on page, ${ctx.totalMatching} total matching filters.`);
-  if (ctx.filters.status) parts.push(`Status filter: ${STATUS_LABELS[ctx.filters.status] ?? ctx.filters.status}.`);
-  if (ctx.filters.source) parts.push(`Source filter: ${SOURCE_LABELS[ctx.filters.source] ?? ctx.filters.source}.`);
-  if (ctx.search.trim()) parts.push(`Search: "${ctx.search.trim()}".`);
-  if (ctx.filters.sort) parts.push(`Sort: ${ctx.filters.sort === 'latest' ? 'newest first' : 'oldest first'}.`);
-  return parts.join(' ');
+function renderBoldText(text: string): React.ReactNode {
+  const parts = text.split(/(\*\*[^*]+\*\*)/g);
+  return parts.map((part, i) =>
+    part.startsWith('**') && part.endsWith('**') ? (
+      <strong key={i} className="font-semibold text-slate-50">
+        {part.slice(2, -2)}
+      </strong>
+    ) : (
+      <span key={i}>{part}</span>
+    )
+  );
 }
 
-function replyForMessage(input: string, ctx: CoachContext): string {
-  const q = input.toLowerCase().trim();
-  const summary = buildContextSummary(ctx);
-  const qualified = ctx.stats?.byStatus?.qualified ?? 0;
-  const lost = ctx.stats?.byStatus?.lost ?? 0;
-  const newCount = ctx.stats?.byStatus?.new ?? 0;
+function InsightGrid({ insights }: { insights: CoachInsight[] }) {
+  if (!insights.length) return null;
+  const toneClass: Record<string, string> = {
+    neutral: 'border-slate-700/50 bg-slate-800/50 text-slate-300',
+    good: 'border-emerald-500/25 bg-emerald-500/10 text-emerald-300',
+    warn: 'border-amber-500/25 bg-amber-500/10 text-amber-300',
+    accent: 'border-red-500/25 bg-red-500/10 text-red-300',
+  };
+  return (
+    <div className="mt-2.5 grid grid-cols-2 gap-1.5 sm:grid-cols-3">
+      {insights.map((item) => (
+        <div
+          key={item.label}
+          className={`rounded-lg border px-2 py-1.5 ${toneClass[item.tone ?? 'neutral']}`}
+        >
+          <p className="text-[9px] font-medium uppercase tracking-wide text-slate-500">{item.label}</p>
+          <p className="mt-0.5 text-xs font-semibold tabular-nums">{item.value}</p>
+        </div>
+      ))}
+    </div>
+  );
+}
 
-  if (/focus|today|priorit/i.test(q)) {
-    return `Hi${ctx.userName ? ` ${ctx.userName.split(' ')[0]}` : ''}! With ${newCount} new leads, prioritize contacting the newest entries first, then move stalled "contacted" rows toward a decision. ${summary}`;
-  }
-  if (/pipeline|overview|how is/i.test(q)) {
-    return `Pipeline snapshot: ${qualified} qualified vs ${lost} lost — aim to grow qualified while keeping lost reasons documented. ${summary}`;
-  }
-  if (/qualified|qualif/i.test(q)) {
-    return `Qualified leads (${qualified}) deserve fast follow-up: confirm budget, timeline, and decision-maker. If a lead is stuck in "contacted", add a next step date in your CRM habit. ${summary}`;
-  }
-  if (/filter|search|sort/i.test(q)) {
-    return `Filters compose together: status + source + debounced search all narrow the list; pagination is 10 per page. Clear chips reset individual filters. ${summary}`;
-  }
-  if (/export|csv/i.test(q)) {
-    return `Admins can export CSV with the same filters applied to the table — useful for reporting. Sales users can still manage leads but cannot export.`;
-  }
-  if (/help|what can you/i.test(q)) {
-    return `I'm a lightweight pipeline coach (no live AI): ask about focus, pipeline health, filters, or qualified-lead tips. ${summary}`;
-  }
-  return `Thanks for the note. ${summary} Try the quick prompts below for tailored suggestions.`;
+function AssistantBubble({ reply }: { reply: CoachReply }) {
+  const paragraphs = reply.text.split('\n\n');
+  return (
+    <div className="max-w-[92%] rounded-2xl rounded-tl-md border border-slate-700/50 bg-slate-800/90 px-3.5 py-2.5 text-sm leading-relaxed text-slate-200 shadow-sm sm:max-w-[88%]">
+      {paragraphs.map((para, idx) => (
+        <p key={idx} className={idx > 0 ? 'mt-2' : ''}>
+          {renderBoldText(para)}
+        </p>
+      ))}
+      {reply.insights && <InsightGrid insights={reply.insights} />}
+      {reply.tips && reply.tips.length > 0 && (
+        <ul className="mt-2.5 space-y-1.5 border-t border-slate-700/40 pt-2.5">
+          {reply.tips.map((tip, i) => (
+            <li key={i} className="flex gap-2 text-xs leading-relaxed text-slate-400">
+              <span className="mt-1.5 h-1 w-1 flex-shrink-0 rounded-full bg-red-500/80" aria-hidden />
+              <span>{renderBoldText(tip)}</span>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
 }
 
 const PipelineCoachChat: React.FC<{ context: CoachContext }> = ({ context }) => {
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState('');
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: 'welcome',
-      role: 'assistant',
-      text: "Hi! I'm your pipeline coach. Ask anything about your current stats, filters, or what to work on next.",
-    },
-  ]);
+  const [typing, setTyping] = useState(false);
   const listRef = useRef<HTMLDivElement>(null);
+  const welcomedRef = useRef(false);
+
+  const initialWelcome = useMemo(() => buildWelcomeReply(context), [context]);
+
+  const [messages, setMessages] = useState<Message[]>([
+    { id: 'welcome', role: 'assistant', reply: initialWelcome },
+  ]);
+
+  useEffect(() => {
+    if (!context.stats || welcomedRef.current) return;
+    welcomedRef.current = true;
+    setMessages([{ id: 'welcome', role: 'assistant', reply: buildWelcomeReply(context) }]);
+  }, [context.stats, context.totalMatching, context.filters, context.search]);
 
   useEffect(() => {
     if (!open) return;
-    listRef.current?.scrollTo({ top: listRef.current.scrollHeight, behavior: 'smooth' });
-  }, [messages, open]);
+    const el = listRef.current;
+    if (!el) return;
+    requestAnimationFrame(() => {
+      el.scrollTo({ top: el.scrollHeight, behavior: 'smooth' });
+    });
+  }, [messages, open, typing]);
+
+  const pushAssistant = useCallback((reply: CoachReply) => {
+    setMessages((prev) => [
+      ...prev,
+      { id: `a-${Date.now()}`, role: 'assistant', reply },
+    ]);
+    setTyping(false);
+  }, []);
 
   const send = useCallback(
     (text: string) => {
       const trimmed = text.trim();
-      if (!trimmed) return;
+      if (!trimmed || typing) return;
+
       const userMsg: Message = { id: `u-${Date.now()}`, role: 'user', text: trimmed };
-      const answer = replyForMessage(trimmed, context);
-      const botMsg: Message = { id: `a-${Date.now()}`, role: 'assistant', text: answer };
-      setMessages((prev) => [...prev, userMsg, botMsg]);
+      setMessages((prev) => [...prev, userMsg]);
       setInput('');
+      setTyping(true);
+
+      const reply = replyForMessage(trimmed, context);
+      window.setTimeout(() => pushAssistant(reply), 450 + Math.min(trimmed.length * 8, 400));
     },
-    [context]
+    [context, typing, pushAssistant]
   );
 
   return (
@@ -105,13 +153,20 @@ const PipelineCoachChat: React.FC<{ context: CoachContext }> = ({ context }) => 
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
-        className="fixed bottom-5 right-5 z-40 flex h-14 w-14 touch-manipulation items-center justify-center rounded-full bg-violet-600 text-white shadow-lg shadow-violet-900/40 ring-2 ring-violet-400/30 transition hover:bg-violet-500 active:scale-95 sm:bottom-6 sm:right-6"
+        className="fixed bottom-5 right-5 z-40 flex touch-manipulation items-center gap-2 rounded-full bg-gradient-to-r from-red-600 to-red-500 px-4 py-3 text-white shadow-lg shadow-red-900/35 ring-2 ring-red-400/25 transition hover:from-red-500 hover:to-red-400 active:scale-[0.98] sm:bottom-6 sm:right-6 sm:px-5"
         aria-expanded={open}
         aria-controls="pipeline-coach-panel"
         id="pipeline-coach-fab"
       >
-        {open ? <X className="h-6 w-6" aria-hidden /> : <MessageCircle className="h-6 w-6" aria-hidden />}
-        <span className="sr-only">{open ? 'Close pipeline coach' : 'Open pipeline coach'}</span>
+        {open ? (
+          <X className="h-5 w-5 shrink-0" aria-hidden />
+        ) : (
+          <>
+            <MessageCircle className="h-5 w-5 shrink-0" aria-hidden />
+            <span className="hidden text-sm font-semibold sm:inline">Assistant</span>
+          </>
+        )}
+        <span className="sr-only">{open ? 'Close assistant' : 'Open pipeline assistant'}</span>
       </button>
 
       {open && (
@@ -120,59 +175,81 @@ const PipelineCoachChat: React.FC<{ context: CoachContext }> = ({ context }) => 
           role="dialog"
           aria-modal="true"
           aria-labelledby="pipeline-coach-title"
-          className="fixed inset-x-3 bottom-20 z-40 flex max-h-[min(70vh,520px)] flex-col overflow-hidden rounded-2xl border border-slate-700/60 bg-slate-900/95 shadow-2xl backdrop-blur-md sm:inset-x-auto sm:right-6 sm:bottom-24 sm:w-full sm:max-w-md"
+          className="fixed inset-x-2 bottom-[4.5rem] z-40 flex max-h-[min(78vh,560px)] flex-col overflow-hidden rounded-2xl border border-slate-700/60 bg-slate-950/98 shadow-2xl shadow-black/40 backdrop-blur-xl sm:inset-x-auto sm:right-5 sm:bottom-24 sm:w-[min(100vw-2rem,24rem)] md:max-w-md lg:max-w-[26rem]"
         >
-          <div className="flex items-center justify-between border-b border-slate-700/50 px-4 py-3">
-            <div className="flex items-center gap-2">
-              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-amber-500/15 text-amber-400">
-                <Sparkles className="h-4 w-4" />
+          <div className="flex items-center justify-between border-b border-slate-800/80 bg-slate-900/50 px-3 py-3 sm:px-4">
+            <div className="flex min-w-0 items-center gap-2.5">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-red-500/20 to-red-600/10 text-red-400 ring-1 ring-red-500/20">
+                <Bot className="h-5 w-5" />
               </div>
-              <div>
-                <h2 id="pipeline-coach-title" className="text-sm font-semibold text-slate-100">
-                  Pipeline coach
+              <div className="min-w-0">
+                <h2 id="pipeline-coach-title" className="truncate text-sm font-semibold text-slate-100">
+                  GigFlow Assistant
                 </h2>
-                <p className="text-[11px] text-slate-500">Context-aware tips (client-side)</p>
+                <p className="flex items-center gap-1.5 text-[10px] text-slate-500 sm:text-[11px]">
+                  <span className="inline-block h-1.5 w-1.5 rounded-full bg-emerald-500" aria-hidden />
+                  Live pipeline data
+                </p>
               </div>
             </div>
             <button
               type="button"
               onClick={() => setOpen(false)}
-              className="rounded-lg p-2 text-slate-400 hover:bg-slate-800 hover:text-slate-200"
+              className="shrink-0 rounded-lg p-2 text-slate-400 transition hover:bg-slate-800 hover:text-slate-200"
               aria-label="Close"
             >
               <X className="h-4 w-4" />
             </button>
           </div>
 
-          <div ref={listRef} className="min-h-0 flex-1 space-y-3 overflow-y-auto px-4 py-3">
+          <div ref={listRef} className="min-h-0 flex-1 space-y-3 overflow-y-auto overscroll-y-contain px-3 py-3 sm:px-4">
             {messages.map((m) => (
               <div
                 key={m.id}
-                className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}
+                className={`flex gap-2 ${m.role === 'user' ? 'flex-row-reverse' : 'flex-row'}`}
               >
-                <div
-                  className={`max-w-[90%] rounded-2xl px-3 py-2 text-sm leading-relaxed ${
-                    m.role === 'user'
-                      ? 'bg-violet-600 text-white'
-                      : 'border border-slate-700/50 bg-slate-800/80 text-slate-200'
-                  }`}
-                >
-                  {m.text}
-                </div>
+                {m.role === 'assistant' && (
+                  <div
+                    className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-red-500/15 text-red-400"
+                    aria-hidden
+                  >
+                    <Bot className="h-3.5 w-3.5" />
+                  </div>
+                )}
+                {m.role === 'user' ? (
+                  <div className="max-w-[85%] rounded-2xl rounded-tr-md bg-red-600 px-3.5 py-2 text-sm text-white shadow-sm">
+                    {m.text}
+                  </div>
+                ) : m.reply ? (
+                  <AssistantBubble reply={m.reply} />
+                ) : null}
               </div>
             ))}
+            {typing && (
+              <div className="flex gap-2">
+                <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-red-500/15 text-red-400">
+                  <Bot className="h-3.5 w-3.5" />
+                </div>
+                <div className="flex items-center gap-2 rounded-2xl border border-slate-700/50 bg-slate-800/80 px-3 py-2.5 text-slate-400">
+                  <Loader2 className="h-3.5 w-3.5 animate-spin text-red-400" />
+                  <span className="text-xs">Analyzing your pipeline…</span>
+                </div>
+              </div>
+            )}
           </div>
 
-          <div className="border-t border-slate-700/50 px-3 pb-3 pt-2">
-            <div className="mb-2 flex flex-wrap gap-1.5">
-              {quickPrompts.map((p) => (
+          <div className="border-t border-slate-800/80 bg-slate-900/40 px-2.5 pb-2.5 pt-2 sm:px-3 sm:pb-3">
+            <div className="mb-2 flex gap-1.5 overflow-x-auto pb-0.5 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+              {quickPrompts.map(({ label, icon: Icon, prompt }) => (
                 <button
-                  key={p}
+                  key={prompt}
                   type="button"
-                  onClick={() => send(p)}
-                  className="rounded-full border border-slate-600/60 bg-slate-800/60 px-2.5 py-1 text-[11px] text-slate-300 hover:border-violet-500/40 hover:bg-slate-800"
+                  onClick={() => send(prompt)}
+                  disabled={typing}
+                  className="inline-flex shrink-0 items-center gap-1 rounded-full border border-slate-700/60 bg-slate-800/80 px-2.5 py-1.5 text-[10px] font-medium text-slate-300 transition hover:border-red-500/30 hover:bg-slate-800 hover:text-slate-100 disabled:opacity-50 sm:text-[11px]"
                 >
-                  {p}
+                  <Icon className="h-3 w-3 text-red-400/90" />
+                  {label}
                 </button>
               ))}
             </div>
@@ -187,15 +264,16 @@ const PipelineCoachChat: React.FC<{ context: CoachContext }> = ({ context }) => 
                 type="text"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
-                placeholder="Ask about your pipeline..."
-                className="min-h-11 min-w-0 flex-1 rounded-xl border border-slate-600/60 bg-slate-950/50 px-3 text-sm text-slate-100 placeholder:text-slate-500 focus:border-violet-500/50 focus:outline-none focus:ring-1 focus:ring-violet-500/30"
+                placeholder="Ask about leads, filters, priorities…"
+                disabled={typing}
+                className="min-h-11 min-w-0 flex-1 rounded-xl border border-slate-700/60 bg-slate-950/80 px-3 text-sm text-slate-100 placeholder:text-slate-500 focus:border-red-500/40 focus:outline-none focus:ring-1 focus:ring-red-500/25 disabled:opacity-60"
                 autoComplete="off"
               />
               <button
                 type="submit"
-                className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-violet-600 text-white hover:bg-violet-500 disabled:opacity-40"
-                disabled={!input.trim()}
-                aria-label="Send"
+                disabled={!input.trim() || typing}
+                className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-red-600 text-white transition hover:bg-red-500 disabled:opacity-40"
+                aria-label="Send message"
               >
                 <Send className="h-4 w-4" />
               </button>

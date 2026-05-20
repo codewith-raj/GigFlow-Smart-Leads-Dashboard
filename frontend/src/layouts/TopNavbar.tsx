@@ -21,9 +21,9 @@ const TopNavbar: React.FC = () => {
   const roleLabel = user?.role ? ROLE_LABELS[user.role] : '';
 
   return (
-    <header className="sticky top-0 z-30 border-b border-slate-700/50 bg-slate-950/80 shadow-[0_1px_0_oklch(1_0_0/0.04)] backdrop-blur-xl supports-[backdrop-filter]:bg-slate-950/70 pt-[max(0.75rem,env(safe-area-inset-top,0px))]">
+    <header className="sticky top-0 z-20 flex-shrink-0 border-b border-slate-800/60 bg-slate-950/90 shadow-[0_1px_0_oklch(1_0_0/0.04)] backdrop-blur-xl supports-[backdrop-filter]:bg-slate-950/80 pt-[max(0.75rem,env(safe-area-inset-top,0px))]">
       <div className="app-safe-x flex flex-col gap-3 pb-3 sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:pb-4">
-        <div className="min-w-0 pl-11 lg:pl-0">
+        <div className="min-w-0 pl-11 lg:pl-3 xl:pl-4">
           <h1 className="truncate text-lg font-bold tracking-tight text-slate-100 sm:text-xl lg:text-2xl">
             {title}
           </h1>
