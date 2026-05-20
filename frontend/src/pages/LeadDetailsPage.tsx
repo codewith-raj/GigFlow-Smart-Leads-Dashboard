@@ -53,7 +53,7 @@ const LeadDetailsPage: React.FC = () => {
   const creator = typeof lead.createdBy === 'object' ? lead.createdBy : null;
 
   return (
-    <div className="max-w-2xl mx-auto space-y-6">
+    <div className="mx-auto w-full max-w-2xl space-y-6 px-1 sm:px-0">
       <Button
         variant="ghost"
         size="sm"
@@ -63,16 +63,16 @@ const LeadDetailsPage: React.FC = () => {
         Back to Dashboard
       </Button>
 
-      <div className="panel-elevated rounded-2xl overflow-hidden">
-        <div className="bg-gradient-to-r from-violet-600/10 to-indigo-600/10 border-b border-slate-700/40 p-6">
+      <div className="panel-elevated overflow-hidden rounded-2xl">
+        <div className="border-b border-slate-700/40 bg-gradient-to-r from-violet-600/10 to-indigo-600/10 p-4 sm:p-6">
           <div className="flex items-start gap-4">
-            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-violet-500 to-indigo-500 flex items-center justify-center text-white text-xl font-bold shadow-lg flex-shrink-0">
+            <div className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-violet-500 to-indigo-500 text-xl font-bold text-white shadow-lg sm:h-16 sm:w-16 sm:text-2xl">
               {lead.name[0].toUpperCase()}
             </div>
-            <div>
-              <h1 className="text-xl font-bold text-slate-100">{lead.name}</h1>
-              <p className="text-slate-400 text-sm">{lead.email}</p>
-              <div className="flex items-center gap-2 mt-2">
+            <div className="min-w-0 flex-1">
+              <h1 className="text-xl font-bold tracking-tight text-slate-100 sm:text-2xl">{lead.name}</h1>
+              <p className="mt-1 truncate text-sm text-slate-400 sm:text-base">{lead.email}</p>
+              <div className="mt-3 flex flex-wrap gap-2">
                 <Badge
                   label={STATUS_LABELS[lead.status]}
                   colorClass={STATUS_COLORS[lead.status]}
@@ -86,7 +86,7 @@ const LeadDetailsPage: React.FC = () => {
           </div>
         </div>
 
-        <div className="p-6">
+        <div className="p-4 sm:p-6">
           <DetailRow
             icon={<Mail className="w-4 h-4" />}
             label="Email"

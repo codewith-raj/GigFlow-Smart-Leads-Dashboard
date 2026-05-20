@@ -117,11 +117,9 @@ const RegisterPage: React.FC = () => {
           disabled={isSubmitting}
           id="register-submit"
           className="
-            w-full py-3.5 px-6 rounded-xl text-sm font-semibold text-white mt-2
-            bg-gradient-to-r from-rose-600 via-red-600 to-orange-600
-            bg-[length:200%_auto] auth-shine-btn
-            disabled:opacity-60 disabled:cursor-not-allowed
-            active:scale-[0.98] auth-cta-register
+            auth-cta-register auth-shine-btn mt-2 flex min-h-12 w-full touch-manipulation items-center justify-center rounded-xl
+            bg-gradient-to-r from-rose-600 via-red-600 to-orange-600 bg-[length:200%_auto] px-6 py-3.5 text-sm font-semibold text-white
+            active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60
           "
         >
           {isSubmitting ? 'Creating account...' : 'Create Account'}

@@ -35,22 +35,23 @@ const Pagination: React.FC<PaginationProps> = ({ pagination, onPageChange }) => 
   };
 
   return (
-    <div className="flex flex-col sm:flex-row items-center justify-between gap-4 px-1 py-4">
-      <p className="text-sm text-slate-400">
+    <div className="flex flex-col items-center justify-between gap-4 px-1 py-4 sm:flex-row sm:px-2 sm:py-4">
+      <p className="order-2 max-w-full shrink-0 text-center text-sm text-slate-400 sm:order-1 sm:text-left">
         Showing page{' '}
         <span className="font-medium text-slate-200">{currentPage}</span> of{' '}
         <span className="font-medium text-slate-200">{totalPages}</span> ·{' '}
-        <span className="font-medium text-slate-200">{totalRecords}</span> total records
+        <span className="font-medium text-slate-200">{totalRecords}</span> total
       </p>
 
-      <div className="flex items-center gap-1">
+      <div className="order-1 flex max-w-full flex-wrap items-center justify-center gap-1 overflow-x-auto pb-1 sm:order-2 sm:justify-end sm:pb-0">
         <button
+          type="button"
           onClick={() => onPageChange(currentPage - 1)}
           disabled={!hasPrevPage}
-          className="p-2 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-800 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+          className="flex h-11 min-w-[44px] touch-manipulation items-center justify-center rounded-xl text-slate-400 transition-colors hover:bg-slate-800 hover:text-slate-200 disabled:cursor-not-allowed disabled:opacity-30"
           aria-label="Previous page"
         >
-          <ChevronLeft className="w-4 h-4" />
+          <ChevronLeft className="h-4 w-4" />
         </button>
 
         {getPageNumbers().map((page, idx) =>
@@ -60,14 +61,15 @@ const Pagination: React.FC<PaginationProps> = ({ pagination, onPageChange }) => 
             </span>
           ) : (
             <button
+              type="button"
               key={page}
               onClick={() => onPageChange(page as number)}
               className={`
-                min-w-[36px] h-9 px-3 rounded-lg text-sm font-medium transition-all duration-150
+                flex h-11 min-w-[44px] touch-manipulation items-center justify-center rounded-xl px-3 text-sm font-medium transition-all duration-150
                 ${
                   currentPage === page
                     ? 'bg-violet-600 text-white shadow-lg shadow-violet-500/20'
-                    : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800'
+                    : 'text-slate-400 hover:bg-slate-800 hover:text-slate-200'
                 }
               `}
             >
@@ -77,12 +79,13 @@ const Pagination: React.FC<PaginationProps> = ({ pagination, onPageChange }) => 
         )}
 
         <button
+          type="button"
           onClick={() => onPageChange(currentPage + 1)}
           disabled={!hasNextPage}
-          className="p-2 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-800 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+          className="flex h-11 min-w-[44px] touch-manipulation items-center justify-center rounded-xl text-slate-400 transition-colors hover:bg-slate-800 hover:text-slate-200 disabled:cursor-not-allowed disabled:opacity-30"
           aria-label="Next page"
         >
-          <ChevronRight className="w-4 h-4" />
+          <ChevronRight className="h-4 w-4" />
         </button>
       </div>
     </div>

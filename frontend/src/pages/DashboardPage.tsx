@@ -106,8 +106,8 @@ const DashboardPage: React.FC = () => {
   const pagination = leadsData?.pagination;
 
   return (
-    <div className="space-y-6 max-w-[1400px] mx-auto">
-      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+    <div className="w-full space-y-5 sm:space-y-6 lg:space-y-8">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 xl:grid-cols-4">
         <StatCard
           title="Total Leads"
           value={stats?.total ?? 0}
@@ -138,21 +138,24 @@ const DashboardPage: React.FC = () => {
         />
       </div>
 
-      <div className="panel-elevated rounded-2xl overflow-hidden">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-6 border-b border-slate-700/40">
-          <div>
-            <h2 className="text-lg font-semibold text-slate-100">Lead Pipeline</h2>
-            <p className="text-sm text-slate-400 mt-0.5">
+      <div className="panel-elevated overflow-hidden rounded-2xl">
+        <div className="flex flex-col gap-4 border-b border-slate-700/40 p-4 sm:flex-row sm:items-center sm:justify-between sm:p-6">
+          <div className="min-w-0">
+            <h2 className="text-base font-semibold tracking-tight text-slate-100 sm:text-lg">
+              Lead pipeline
+            </h2>
+            <p className="mt-0.5 text-xs text-slate-400 sm:text-sm">
               {pagination?.totalRecords ?? 0} leads
               {hasActiveFilters ? ' matching your filters' : ' in your pipeline'}
             </p>
           </div>
-          <div className="flex items-center gap-2 flex-wrap">
+          <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:items-center sm:gap-2">
             {user?.role === 'admin' && (
               <Button
                 variant="outline"
                 size="sm"
-                leftIcon={<Download className="w-4 h-4" />}
+                className="min-h-11 w-full touch-manipulation justify-center sm:w-auto"
+                leftIcon={<Download className="h-4 w-4" />}
                 onClick={() =>
                   exportCsv({
                     status: filters.status,
@@ -169,16 +172,17 @@ const DashboardPage: React.FC = () => {
             <Button
               variant="primary"
               size="sm"
-              leftIcon={<Plus className="w-4 h-4" />}
+              className="min-h-11 w-full touch-manipulation justify-center sm:w-auto"
+              leftIcon={<Plus className="h-4 w-4" />}
               onClick={() => setIsCreateModalOpen(true)}
               id="create-lead-btn"
             >
-              Add Lead
+              Add lead
             </Button>
           </div>
         </div>
 
-        <div className="p-6 space-y-4 border-b border-slate-700/40">
+        <div className="space-y-4 border-b border-slate-700/40 p-4 sm:p-6">
           <SearchBar
             value={searchInput}
             onChange={(val) => {
@@ -200,7 +204,7 @@ const DashboardPage: React.FC = () => {
           />
         </div>
 
-        <div className="p-6">
+        <div className="p-4 sm:p-6">
           {leadsError ? (
             <QueryErrorState
               title="Could not load leads"

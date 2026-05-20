@@ -92,12 +92,10 @@ const LoginPage: React.FC = () => {
           disabled={isSubmitting}
           id="login-submit"
           className="
-            w-full py-3.5 px-6 rounded-xl text-sm font-semibold
-            text-slate-950 bg-gradient-to-r from-sky-100 via-white to-sky-50
-            hover:from-white hover:to-sky-100
-            disabled:opacity-60 disabled:cursor-not-allowed
-            transition-all duration-300 hover:shadow-lg hover:shadow-sky-500/20
-            active:scale-[0.98] auth-cta-login
+            auth-cta-login flex min-h-12 w-full touch-manipulation items-center justify-center rounded-xl px-6 py-3.5 text-sm font-semibold
+            bg-gradient-to-r from-sky-100 via-white to-sky-50 text-slate-950
+            transition-all duration-300 hover:from-white hover:to-sky-100 hover:shadow-lg hover:shadow-sky-500/20
+            active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60
           "
         >
           {isSubmitting ? 'Signing in...' : 'Sign In'}

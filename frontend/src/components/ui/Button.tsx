@@ -24,9 +24,9 @@ const variantClasses: Record<Variant, string> = {
 };
 
 const sizeClasses: Record<Size, string> = {
-  sm: 'text-xs px-3 py-1.5 rounded-lg',
-  md: 'text-sm px-4 py-2 rounded-xl',
-  lg: 'text-base px-6 py-3 rounded-xl',
+  sm: 'text-xs min-h-10 px-3 py-2 rounded-lg touch-manipulation',
+  md: 'text-sm min-h-11 px-4 py-2.5 rounded-xl touch-manipulation',
+  lg: 'text-base min-h-12 px-6 py-3 rounded-xl touch-manipulation',
 };
 
 const Button: React.FC<ButtonProps> = ({

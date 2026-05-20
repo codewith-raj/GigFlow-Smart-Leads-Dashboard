@@ -29,14 +29,13 @@ const hasActiveFilters = (filters: Partial<LeadFilters>) =>
 
 const FiltersBar: React.FC<FiltersBarProps> = ({ filters, onChange, onReset }) => {
   return (
-    <div className="bg-slate-900/40 border border-slate-700/40 rounded-2xl p-4">
-      <div className="flex flex-wrap items-end gap-3">
-        <div className="flex items-center gap-2 text-slate-400 mr-1">
-          <Filter className="w-4 h-4" />
-          <span className="text-sm font-medium">Filters</span>
-        </div>
-
-        <div className="w-40">
+    <div className="rounded-2xl border border-slate-700/40 bg-slate-900/40 p-4 sm:p-5">
+      <div className="mb-3 flex items-center gap-2 text-slate-400">
+        <Filter className="h-4 w-4 flex-shrink-0" />
+        <span className="text-sm font-medium">Filters</span>
+      </div>
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:flex lg:flex-wrap lg:items-end">
+        <div className="min-w-0 w-full sm:min-w-[10rem] lg:w-44">
           <Select
             options={statusOptions}
             placeholder="All Status"
@@ -46,7 +45,7 @@ const FiltersBar: React.FC<FiltersBarProps> = ({ filters, onChange, onReset }) =
           />
         </div>
 
-        <div className="w-40">
+        <div className="min-w-0 w-full sm:min-w-[10rem] lg:w-44">
           <Select
             options={sourceOptions}
             placeholder="All Sources"
@@ -56,7 +55,7 @@ const FiltersBar: React.FC<FiltersBarProps> = ({ filters, onChange, onReset }) =
           />
         </div>
 
-        <div className="w-44">
+        <div className="min-w-0 w-full sm:min-w-[10rem] lg:w-48">
           <Select
             options={sortOptions}
             value={filters.sort ?? 'latest'}
@@ -66,14 +65,17 @@ const FiltersBar: React.FC<FiltersBarProps> = ({ filters, onChange, onReset }) =
         </div>
 
         {hasActiveFilters(filters) && (
-          <Button
-            variant="ghost"
-            size="sm"
-            leftIcon={<X className="w-3.5 h-3.5" />}
-            onClick={onReset}
-          >
-            Clear
-          </Button>
+          <div className="flex items-end lg:ml-auto">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="min-h-11 w-full touch-manipulation sm:w-auto"
+              leftIcon={<X className="h-3.5 w-3.5" />}
+              onClick={onReset}
+            >
+              Clear filters
+            </Button>
+          </div>
         )}
       </div>
     </div>

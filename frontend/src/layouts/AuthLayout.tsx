@@ -44,7 +44,7 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({
   const isRegister = variant === 'register';
 
   return (
-    <div className="min-h-screen min-h-[100dvh] flex flex-col lg:flex-row bg-slate-950 overflow-hidden">
+    <div className="min-h-screen min-h-[100dvh] flex flex-col overflow-x-hidden bg-slate-950 lg:flex-row">
       <aside
         className={`
           auth-panel-aside relative flex flex-col justify-between
@@ -101,7 +101,7 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({
 
       <main
         className={`
-          flex-1 flex items-center justify-center px-5 sm:px-8 lg:px-12 xl:px-16 py-10 lg:py-12
+          flex flex-1 items-center justify-center px-4 pb-[max(2.5rem,env(safe-area-inset-bottom,0px))] pt-6 sm:px-8 sm:pt-10 lg:px-12 lg:py-12 xl:px-16
           ${isRegister ? 'bg-gradient-to-b from-slate-950 to-slate-900' : 'bg-slate-950'}
         `}
       >
