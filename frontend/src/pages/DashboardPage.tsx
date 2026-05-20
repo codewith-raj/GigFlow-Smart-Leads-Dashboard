@@ -25,6 +25,9 @@ import SearchBar from '@/components/ui/SearchBar';
 import Pagination from '@/components/ui/Pagination';
 import QueryErrorState from '@/components/ui/QueryErrorState';
 import Button from '@/components/ui/Button';
+import DashboardCharts from '@/components/dashboard/DashboardCharts';
+import RecentLeadsPanel from '@/components/dashboard/RecentLeadsPanel';
+import PipelineCoachChat from '@/components/dashboard/PipelineCoachChat';
 
 const DashboardPage: React.FC = () => {
   const { user } = useAuthStore();
@@ -59,7 +62,7 @@ const DashboardPage: React.FC = () => {
     placeholderData: (prev) => prev,
   });
 
-  const { data: statsData } = useQuery({
+  const { data: statsData, isLoading: statsLoading } = useQuery({
     queryKey: ['stats'],
     queryFn: leadsApi.getStats,
     staleTime: 60_000,
@@ -136,6 +139,15 @@ const DashboardPage: React.FC = () => {
           colorClass="text-red-400"
           iconBgClass="bg-red-500/10 border-red-500/20"
         />
+      </div>
+
+      <div className="grid gap-4 lg:grid-cols-3 lg:items-stretch lg:gap-6">
+        <div className="min-w-0 lg:col-span-2">
+          <DashboardCharts stats={stats} isLoading={statsLoading} />
+        </div>
+        <div className="min-h-[280px] min-w-0 lg:min-h-0">
+          <RecentLeadsPanel leads={leads} isLoading={leadsLoading} />
+        </div>
       </div>
 
       <div className="panel-elevated overflow-hidden rounded-2xl">
@@ -246,6 +258,17 @@ const DashboardPage: React.FC = () => {
         onConfirm={() => deletingLead && deleteMutation.mutate(deletingLead._id)}
         isLoading={deleteMutation.isPending}
         leadName={deletingLead?.name}
+      />
+
+      <PipelineCoachChat
+        context={{
+          stats,
+          filters,
+          search: debouncedSearch,
+          pageMatchCount: leads.length,
+          totalMatching: pagination?.totalRecords ?? leads.length,
+          userName: user?.name,
+        }}
       />
     </div>
   );
