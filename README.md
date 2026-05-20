@@ -1,14 +1,27 @@
-# GigFlow Smart Leads Dashboard
+﻿# GigFlow Smart Leads Dashboard
 
-> **GigFlow-Smart-Leads-Dashboard** — Production-ready MERN lead management platform with JWT authentication, RBAC (Admin / Sales User), advanced filtering with debounced search, server-side pagination, CSV export, Docker, and dark mode.
-
-**Production deploy checklist:** see [DEPLOYMENT.md](./DEPLOYMENT.md).
+> A polished MERN lead management dashboard with JWT auth, RBAC, filtering, pagination, CSV export, dark mode, and live deployment.
 
 ---
 
-## 📸 Screenshots
+## 🚀 Live Demo
 
-> Register · Login · Dashboard · Lead Details
+- Frontend: `https://gig-flow-smart-leads-dashboard-alpha.vercel.app/login`
+- Backend: `https://gigflow-smart-leads-dashboard-ptr4.onrender.com`
+
+---
+
+## ✨ What this project includes
+
+- Modern **MERN + TypeScript** architecture
+- JWT-based authentication with secure password hashing
+- Role-based access control for Admin and Sales users
+- Lead CRUD with details, filters, and analytics
+- Advanced filtering and debounced search
+- Server-side pagination with metadata
+- CSV export for filtered lead data
+- Responsive dashboard UI with dark mode
+- Docker support and deployment-ready configuration
 
 ---
 
@@ -16,280 +29,165 @@
 
 | Layer      | Technologies                                                           |
 | ---------- | ---------------------------------------------------------------------- |
-| Frontend   | React 18, TypeScript, Vite, TailwindCSS, React Router DOM, Axios      |
-| State      | Zustand (auth), TanStack Query (server state)                          |
-| Forms      | React Hook Form + Zod validation                                       |
-| UI         | Lucide React icons, React Hot Toast                                    |
-| Backend    | Node.js, Express.js, TypeScript, Mongoose                              |
-| Auth       | JWT (jsonwebtoken), bcryptjs password hashing                          |
+| Frontend   | React 18, TypeScript, Vite, TailwindCSS, React Router, Axios           |
+| State      | Zustand, TanStack Query                                                 |
+| Forms      | React Hook Form, Zod                                                    |
+| Backend    | Node.js, Express, TypeScript, Mongoose                                 |
+| Auth       | JWT, bcryptjs                                                           |
 | Security   | helmet, cors, dotenv, express-async-errors                             |
-| Validation | Zod (both frontend & backend)                                          |
-| Database   | MongoDB / MongoDB Atlas                                                |
-| DevOps     | Docker, Docker Compose, Vercel (frontend), Render/Railway (backend)    |
+| Validation | Zod (frontend + backend)                                                |
+| Database   | MongoDB / MongoDB Atlas                                                 |
+| Deployment | Vercel (frontend), Render (backend), Docker                            |
 
 ---
 
-## ✨ Features
+## 🚩 Key Features
 
 ### Authentication
-- ✅ JWT-based login & registration
-- ✅ Password hashing with bcrypt (12 rounds)
-- ✅ Token stored in localStorage, auto-attached via Axios interceptor
-- ✅ Global 401 handler with automatic redirect
-- ✅ Protected & Public route guards
+- JWT login and registration
+- Password hashing with bcrypt
+- Protected routes and auth guards
+- Global 401 handling with redirect to login
 
-### RBAC (Role-Based Access Control)
+### Role-Based Access Control
 | Feature        | Admin | Sales |
 | -------------- | :---: | :---: |
-| View Leads     | ✅    | ✅    |
-| Create Leads   | ✅    | ✅    |
-| Update Leads   | ✅    | ✅    |
-| Delete Leads   | ✅    | ❌    |
+| View leads     | ✅    | ✅    |
+| Create leads   | ✅    | ✅    |
+| Update leads   | ✅    | ✅    |
+| Delete leads   | ✅    | ❌    |
 | Export CSV     | ✅    | ❌    |
 
-### Leads Management
-- ✅ Full CRUD (Create, Read, Update, Delete)
-- ✅ Lead fields: name, email, status, source, createdBy, timestamps.
-- ✅ Status: `new` | `contacted` | `qualified` | `lost`
-- ✅ Source: `website` | `instagram` | `referral`
+### Lead Management
+- Full CRUD for leads
+- Lead fields: `name`, `email`, `status`, `source`, `createdBy`, timestamps
+- Status: `new`, `contacted`, `qualified`, `lost`
+- Source: `website`, `instagram`, `referral`
 
-### Advanced Filtering
-- ✅ Filter by status
-- ✅ Filter by source
-- ✅ Debounced search (500ms) on name/email
-- ✅ Sort by latest/oldest
-- ✅ All filters composable simultaneously
-- ✅ Dynamic MongoDB query building
+### Filtering & Search
+- Filter by status and source
+- Debounced search on name/email
+- Sort by latest or oldest
+- Combined filters for richer queries
 
-### Pagination
-- ✅ Server-side pagination (10 per page)
-- ✅ Smart ellipsis pagination UI
-- ✅ Full pagination metadata in API response..
-
-### Additional
-- ✅ CSV Export (admin-only, filter-aware)
-- ✅ Statistics cards (total, qualified, contacted, lost)
-- ✅ Loading states, empty states, error states
-- ✅ Responsive design (mobile + desktop)
-- ✅ Toast notifications
-- ✅ Collapsible sidebar with mobile drawer
-- ✅ Lead detail page
-- ✅ **Dark / light mode** (persisted preference)
-- ✅ Split-screen auth experience with product highlights
-- ✅ Active filter chips & contextual empty states
-- ✅ Production guard: optional `ALLOW_ADMIN_REGISTRATION` env flag
+### Pagination & Export
+- Server-side pagination (default 10 items per page)
+- Smart pagination UI
+- CSV export with active filters applied
 
 ---
 
-## 📁 Folder Structure
+## 📁 Project Structure
 
 ```
 GigFlow-Smart-Leads-Dashboard/
 ├── backend/
-│   └── src/
-│       ├── config/          # DB connection, env validation
-│       ├── controllers/     # HTTP handlers (thin layer)
-│       ├── middlewares/     # auth, validate, errorHandler
-│       ├── models/          # Mongoose schemas
-│       ├── routes/          # Express routers
-│       ├── services/        # Business logic
-│       ├── types/           # TypeScript interfaces
-│       ├── utils/           # response helpers, jwt utils
-│       ├── validations/     # Zod schemas
-│       ├── app.ts           # Express app factory
-│       └── server.ts        # Entry point + graceful shutdown
-│
+│   ├── src/
+│   │   ├── config/       # Env + DB setup
+│   │   ├── controllers/  # HTTP handlers
+│   │   ├── middlewares/  # Auth, validation, error handling
+│   │   ├── models/       # Mongoose schemas
+│   │   ├── routes/       # Express routers
+│   │   ├── services/     # Business logic
+│   │   ├── utils/        # Helpers
+│   │   └── validations/  # Zod schemas
+│   └── .env.example      # Backend environment reference
 ├── frontend/
-│   └── src/
-│       ├── api/             # Axios instance + API services
-│       ├── components/
-│       │   ├── dashboard/   # StatCard, FiltersBar, LeadsTable
-│       │   ├── forms/       # LeadFormModal, ConfirmDeleteModal
-│       │   └── ui/          # Button, Input, Select, Modal, Badge...
-│       ├── constants/       # App-wide constants & color maps
-│       ├── hooks/           # useDebounce, useCsvExport
-│       ├── layouts/         # Sidebar, TopNavbar, DashboardLayout
-│       ├── pages/           # Login, Register, Dashboard, LeadDetails
-│       ├── routes/          # ProtectedRoute, PublicRoute
-│       ├── store/           # Zustand auth store
-│       └── types/           # TypeScript interfaces
-│
+│   ├── src/
+│   ├── public/
+│   └── .env.example      # Frontend environment reference
 ├── api-docs/
-│   └── gigflow-smart-leads-dashboard.postman_collection.json
 ├── docker-compose.yml
-├── .gitignore
+├── .env.example
+├── API.md
 └── README.md
 ```
 
 ---
 
-## 🔌 API Documentation
-
-### Auth Routes
-
-| Method | Endpoint             | Auth | Description     |
-| ------ | -------------------- | :--: | --------------- |
-| POST   | /api/auth/register   | ❌   | Register user   |
-| POST   | /api/auth/login      | ❌   | Login user      |
-| GET    | /api/auth/me         | ✅   | Get current user|
-
-### Lead Routes
-
-| Method | Endpoint                   | Auth  | Role  | Description       |
-| ------ | -------------------------- | :---: | :---: | ----------------- |
-| GET    | /api/leads                 | ✅    | All   | Get all leads     |
-| GET    | /api/leads/stats           | ✅    | All   | Get stats         |
-| GET    | /api/leads/export/csv      | ✅    | Admin | Export CSV        |
-| GET    | /api/leads/:id             | ✅    | All   | Get single lead   |
-| POST   | /api/leads                 | ✅    | All   | Create lead       |
-| PUT    | /api/leads/:id             | ✅    | All   | Update lead       |
-| DELETE | /api/leads/:id             | ✅    | Admin | Delete lead       |
-
-### Query Parameters (GET /api/leads)
-
-| Param   | Type                                       | Default  |
-| ------- | ------------------------------------------ | -------- |
-| page    | number                                     | 1        |
-| limit   | number (max 100)                           | 10       |
-| status  | new \| contacted \| qualified \| lost      | —        |
-| source  | website \| instagram \| referral           | —        |
-| search  | string                                     | —        |
-| sort    | latest \| oldest                           | latest   |
-
-### Standard API Response Format
-
-```json
-{
-  "success": true,
-  "message": "Leads fetched successfully",
-  "data": [],
-  "pagination": {
-    "currentPage": 1,
-    "totalPages": 5,
-    "totalRecords": 50,
-    "hasNextPage": true,
-    "hasPrevPage": false
-  }
-}
-```
-
----
-
-## 🚀 Local Development Setup
+## 🔌 Setup Instructions
 
 ### Prerequisites
 - Node.js 20+
-- MongoDB (local or Atlas URI)
 - npm
+- MongoDB local or Atlas URI
+- Optional: Docker
 
-### Backend
+### Local Development
+
+#### Backend
 
 ```bash
 cd backend
 cp .env.example .env
-# Edit .env with your MONGODB_URI and JWT_SECRET
+# Update backend/.env with your MongoDB URI and JWT secret
 npm install
 npm run dev
 ```
 
-### Frontend
+Backend default URL: `http://localhost:5000`
+
+#### Frontend
 
 ```bash
 cd frontend
 cp .env.example .env
+# Update frontend/.env if needed
 npm install
 npm run dev
 ```
 
-Frontend runs at `http://localhost:5173`  
-Backend runs at `http://localhost:5000`
+Frontend default URL: `http://localhost:5173`
+
+---
+
+## 🔧 Environment Variables
+
+This repo includes safe example environment files with placeholders only.
+- Root env reference: `.env.example`
+- Backend env reference: `backend/.env.example`
+- Frontend env reference: `frontend/.env.example`
+
+### Backend variables
+- `PORT`
+- `NODE_ENV`
+- `MONGODB_URI`
+- `JWT_SECRET`
+- `JWT_EXPIRES_IN`
+- `FRONTEND_URL`
+- `ALLOW_ADMIN_REGISTRATION`
+- `GOOGLE_CLIENT_ID`
+
+### Frontend variables
+- `VITE_API_URL`
+- `VITE_GOOGLE_CLIENT_ID`
 
 ---
 
 ## 🐳 Docker Setup
 
 ```bash
-# Build and run all services
 docker-compose up --build
-
-# Stop services
 docker-compose down
-
-# Stop and remove volumes
-docker-compose down -v
 ```
 
-Services:
-- **Frontend** → `http://localhost:80`
-- **Backend** → `http://localhost:5000`
-- **MongoDB** → `localhost:27017`
+---
+
+## 📌 API Documentation
+
+See [API.md](./API.md) for full API details, request payloads, and response schemas.
 
 ---
 
-## 🌐 Environment Variables
+## ✅ Deployment
 
-### Backend (`.env`)
-
-| Variable       | Description                          | Example                        |
-| -------------- | ------------------------------------ | ------------------------------ |
-| PORT           | Server port                          | 5000                           |
-| NODE_ENV       | Environment                          | development / production       |
-| MONGODB_URI    | MongoDB connection string            | mongodb+srv://...              |
-| JWT_SECRET     | JWT signing secret (min 32 chars)    | your-super-secret-key          |
-| JWT_EXPIRES_IN | Token expiry                         | 7d                             |
-| FRONTEND_URL   | Allowed CORS origin                  | http://localhost:5173           |
-
-### Frontend (`.env`)
-
-| Variable     | Description        | Example                                    |
-| ------------ | ------------------ | ------------------------------------------ |
-| VITE_API_URL | Backend API URL    | /api (dev) or https://api.example.com/api  |
+- Frontend: `https://gig-flow-smart-leads-dashboard-alpha.vercel.app/login`
+- Backend: `https://gigflow-smart-leads-dashboard-ptr4.onrender.com`
 
 ---
 
-## ☁️ Deployment
+## 📌 Notes
 
-### Frontend → Vercel
-1. Import the `frontend/` folder into Vercel
-2. Set `VITE_API_URL` to your backend URL in Vercel environment variables
-3. Deploy
-
-### Backend → Render / Railway
-1. Connect your GitHub repo
-2. Set root directory to `backend/`
-3. Build command: `npm run build`
-4. Start command: `npm start`
-5. Add all environment variables from `.env.example`
-
-### Database → MongoDB Atlas
-1. Create a free cluster at [mongodb.com/cloud/atlas](https://mongodb.com/cloud/atlas)
-2. Whitelist all IPs (`0.0.0.0/0`) or your server IP
-3. Copy connection string to `MONGODB_URI`
-
----
-
-## 🏗️ Architecture Decisions
-
-- **Service layer**: Business logic lives in `services/`, controllers are thin HTTP handlers
-- **Zod everywhere**: Same validation library on both frontend and backend
-- **Zustand + TanStack Query**: Zustand owns auth/UI state; TanStack Query owns all server state
-- **Dynamic filter building**: MongoDB queries built programmatically using spread — no string concatenation
-- **`Promise.all` for pagination**: Count and data fetched in parallel for performance
-- **Multi-stage Docker**: TS compiled in build stage, only JS + node_modules in production image
-
----
-
-## 📝 Git Commit Style
-
-```
-feat: setup backend typescript server
-feat: implement jwt authentication  
-feat: add lead CRUD APIs
-feat: implement advanced filtering with pagination
-feat: add dashboard UI with stats cards
-feat: integrate debounced search
-feat: add CSV export for admin role
-feat: add Docker setup with compose
-fix: resolve auth middleware typing
-style: improve responsive layout
-```
+- `.env.example` files contain placeholders only and do not include secrets.
+- Do not commit `.env` files with real credentials.
+- Make sure backend `FRONTEND_URL` matches the deployed or local frontend URL.

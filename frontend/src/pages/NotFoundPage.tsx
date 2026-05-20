@@ -8,31 +8,36 @@ const NotFoundPage: React.FC = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center p-6 relative overflow-hidden">
+    <div className="relative flex min-h-[100dvh] flex-col items-center justify-center overflow-hidden bg-slate-950 p-6">
       <div
-        className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-violet-900/15 via-slate-950 to-slate-950 pointer-events-none"
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-red-900/15 via-slate-950 to-slate-950"
         aria-hidden
       />
-      <div className="relative z-10 text-center max-w-md">
-        <BrandLogo size="md" className="justify-center mb-10" />
-        <p className="text-7xl font-bold bg-gradient-to-r from-violet-400 to-indigo-400 bg-clip-text text-transparent">
+      <div className="relative z-10 max-w-md text-center">
+        <BrandLogo size="md" className="mb-10 justify-center" />
+        <p className="bg-gradient-to-r from-red-400 to-red-600 bg-clip-text text-7xl font-bold text-transparent">
           404
         </p>
-        <h1 className="text-xl font-semibold text-slate-200 mt-4">Page not found</h1>
-        <p className="text-slate-500 text-sm mt-2 mb-8">
+        <h1 className="mt-4 text-xl font-semibold text-slate-200">Page not found</h1>
+        <p className="mt-2 text-sm text-slate-500">
           The page you are looking for does not exist or has been moved.
         </p>
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+        <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
           <Button
             variant="primary"
-            leftIcon={<Home className="w-4 h-4" />}
+            className="min-h-11 w-full touch-manipulation sm:w-auto"
+            leftIcon={<Home className="h-4 w-4" />}
             onClick={() => navigate('/dashboard')}
           >
-            Go to Dashboard
+            Go to dashboard
           </Button>
-          <Link to="/login">
-            <Button variant="outline" leftIcon={<ArrowLeft className="w-4 h-4" />}>
-              Back to Login
+          <Link to="/login" className="w-full sm:w-auto">
+            <Button
+              variant="outline"
+              className="min-h-11 w-full touch-manipulation"
+              leftIcon={<ArrowLeft className="h-4 w-4" />}
+            >
+              Back to login
             </Button>
           </Link>
         </div>
