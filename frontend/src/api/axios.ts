@@ -1,5 +1,6 @@
 import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
 import { API_BASE_URL } from '@/constants';
+import { useAuthStore } from '@/store/authStore';
 
 const axiosInstance = axios.create({
   baseURL: API_BASE_URL,
@@ -24,9 +25,11 @@ axiosInstance.interceptors.response.use(
   (response) => response,
   (error: AxiosError) => {
     if (error.response?.status === 401) {
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
-      if (!window.location.pathname.startsWith('/login')) {
+      useAuthStore.getState().clearAuth();
+      if (
+        !window.location.pathname.startsWith('/login') &&
+        !window.location.pathname.startsWith('/register')
+      ) {
         window.location.href = '/login';
       }
     }

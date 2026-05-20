@@ -1,4 +1,4 @@
-import React, { Suspense } from 'react';
+import React, { Suspense, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { GoogleOAuthProvider } from '@react-oauth/google';
@@ -13,6 +13,8 @@ import DashboardPage from '@/pages/DashboardPage';
 import LeadDetailsPage from '@/pages/LeadDetailsPage';
 import NotFoundPage from '@/pages/NotFoundPage';
 import Loader from '@/components/ui/Loader';
+import { useAuthStore } from '@/store/authStore';
+import { authApi } from '@/api/auth.api';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -24,27 +26,74 @@ const queryClient = new QueryClient({
   },
 });
 
+const AuthBootstrap: React.FC = () => {
+  const {
+    token,
+    isHydrated,
+    isCheckingAuth,
+    setAuth,
+    clearAuth,
+    setCheckingAuth,
+  } = useAuthStore();
+
+  useEffect(() => {
+    if (!isHydrated || isCheckingAuth) {
+      return;
+    }
+
+    if (!token) {
+      clearAuth();
+      return;
+    }
+
+    let mounted = true;
+    setCheckingAuth(true);
+
+    authApi
+      .getMe()
+      .then((res) => {
+        if (!mounted || !res.data) return;
+        setAuth(res.data.user, token);
+      })
+      .catch(() => {
+        if (!mounted) return;
+        clearAuth();
+      })
+      .finally(() => {
+        if (!mounted) return;
+        setCheckingAuth(false);
+      });
+
+    return () => {
+      mounted = false;
+    };
+  }, [token, isHydrated, isCheckingAuth, setAuth, clearAuth, setCheckingAuth]);
+
+  return null;
+};
+
 const AppShell: React.FC = () => (
   <BrowserRouter>
-        <Suspense fallback={<Loader fullscreen />}>
-          <Routes>
-            <Route path="/" element={<Navigate to="/dashboard" replace />} />
+    <AuthBootstrap />
+    <Suspense fallback={<Loader fullscreen />}>
+      <Routes>
+        <Route path="/" element={<Navigate to="/dashboard" replace />} />
 
-            <Route element={<PublicRoute />}>
-              <Route path="/login" element={<LoginPage />} />
-              <Route path="/register" element={<RegisterPage />} />
-            </Route>
+        <Route element={<PublicRoute />}>
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+        </Route>
 
-            <Route element={<ProtectedRoute />}>
-              <Route element={<DashboardLayout />}>
-                <Route path="/dashboard" element={<DashboardPage />} />
-                <Route path="/leads/:id" element={<LeadDetailsPage />} />
-              </Route>
-            </Route>
+        <Route element={<ProtectedRoute />}>
+          <Route element={<DashboardLayout />}>
+            <Route path="/dashboard" element={<DashboardPage />} />
+            <Route path="/leads/:id" element={<LeadDetailsPage />} />
+          </Route>
+        </Route>
 
-            <Route path="*" element={<NotFoundPage />} />
-          </Routes>
-        </Suspense>
+        <Route path="*" element={<NotFoundPage />} />
+      </Routes>
+    </Suspense>
   </BrowserRouter>
 );
 
