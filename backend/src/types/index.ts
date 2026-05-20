@@ -14,6 +14,11 @@ export interface IUser extends Document {
   avatar?: string;
   authProvider: AuthProvider;
   role: UserRole;
+  phone?: string;
+  jobTitle?: string;
+  company?: string;
+  location?: string;
+  bio?: string;
   createdAt: Date;
   updatedAt: Date;
   comparePassword(candidatePassword: string): Promise<boolean>;

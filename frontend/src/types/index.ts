@@ -1,13 +1,38 @@
 
 export type UserRole = 'admin' | 'sales';
 
+export type AuthProvider = 'local' | 'google';
+
 export interface User {
   _id: string;
   name: string;
   email: string;
   role: UserRole;
+  avatar?: string;
+  authProvider?: AuthProvider;
+  phone?: string;
+  jobTitle?: string;
+  company?: string;
+  location?: string;
+  bio?: string;
   createdAt: string;
   updatedAt: string;
+}
+
+export interface UpdateProfileForm {
+  name: string;
+  email: string;
+  phone?: string;
+  jobTitle?: string;
+  company?: string;
+  location?: string;
+  bio?: string;
+}
+
+export interface ChangePasswordForm {
+  currentPassword: string;
+  newPassword: string;
+  confirmPassword: string;
 }
 
 export type LeadStatus = 'new' | 'contacted' | 'qualified' | 'lost';

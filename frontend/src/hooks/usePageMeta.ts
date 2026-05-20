@@ -15,6 +15,13 @@ export const usePageMeta = (): PageMeta => {
     };
   }
 
+  if (matchPath({ path: '/profile', end: true }, pathname)) {
+    return {
+      title: 'My Profile',
+      subtitle: 'Manage your account, security, and professional details',
+    };
+  }
+
   return {
     title: 'Lead Pipeline',
     subtitle: 'Monitor performance, filter leads, and manage your sales funnel',

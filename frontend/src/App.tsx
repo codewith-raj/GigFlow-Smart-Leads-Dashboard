@@ -11,6 +11,7 @@ import LoginPage from '@/pages/LoginPage';
 import RegisterPage from '@/pages/RegisterPage';
 import DashboardPage from '@/pages/DashboardPage';
 import LeadDetailsPage from '@/pages/LeadDetailsPage';
+import ProfilePage from '@/pages/ProfilePage';
 import NotFoundPage from '@/pages/NotFoundPage';
 import Loader from '@/components/ui/Loader';
 import { useAuthStore } from '@/store/authStore';
@@ -74,6 +75,7 @@ const AppShell: React.FC = () => (
         <Route element={<ProtectedRoute />}>
           <Route element={<DashboardLayout />}>
             <Route path="/dashboard" element={<DashboardPage />} />
+            <Route path="/profile" element={<ProfilePage />} />
             <Route path="/leads/:id" element={<LeadDetailsPage />} />
           </Route>
         </Route>

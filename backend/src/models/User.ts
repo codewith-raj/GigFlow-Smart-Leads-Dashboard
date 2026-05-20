@@ -45,6 +45,31 @@ const UserSchema = new Schema<IUser>(
       enum: ['admin', 'sales'],
       default: 'sales',
     },
+    phone: {
+      type: String,
+      trim: true,
+      maxlength: [30, 'Phone cannot exceed 30 characters'],
+    },
+    jobTitle: {
+      type: String,
+      trim: true,
+      maxlength: [100, 'Job title cannot exceed 100 characters'],
+    },
+    company: {
+      type: String,
+      trim: true,
+      maxlength: [100, 'Company cannot exceed 100 characters'],
+    },
+    location: {
+      type: String,
+      trim: true,
+      maxlength: [120, 'Location cannot exceed 120 characters'],
+    },
+    bio: {
+      type: String,
+      trim: true,
+      maxlength: [500, 'Bio cannot exceed 500 characters'],
+    },
   },
   {
     timestamps: true,

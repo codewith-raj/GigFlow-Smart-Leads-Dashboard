@@ -1,5 +1,13 @@
 import axiosInstance from './axios';
-import { ApiResponse, AuthUser, LoginForm, RegisterForm, User } from '@/types';
+import {
+  ApiResponse,
+  AuthUser,
+  ChangePasswordForm,
+  LoginForm,
+  RegisterForm,
+  UpdateProfileForm,
+  User,
+} from '@/types';
 
 export const authApi = {
   register: async (data: RegisterForm): Promise<ApiResponse<AuthUser>> => {
@@ -25,6 +33,16 @@ export const authApi = {
 
   getMe: async (): Promise<ApiResponse<{ user: User }>> => {
     const res = await axiosInstance.get<ApiResponse<{ user: User }>>('/auth/me');
+    return res.data;
+  },
+
+  updateProfile: async (data: UpdateProfileForm): Promise<ApiResponse<{ user: User }>> => {
+    const res = await axiosInstance.patch<ApiResponse<{ user: User }>>('/auth/profile', data);
+    return res.data;
+  },
+
+  changePassword: async (data: ChangePasswordForm): Promise<ApiResponse<null>> => {
+    const res = await axiosInstance.patch<ApiResponse<null>>('/auth/password', data);
     return res.data;
   },
 };

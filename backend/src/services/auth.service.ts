@@ -2,7 +2,13 @@ import { User } from '../models/User';
 import { AppError } from '../middlewares/errorHandler';
 import { generateToken } from '../utils/jwt';
 import { env } from '../config/env';
-import { RegisterInput, LoginInput, GoogleAuthInput } from '../validations/auth.validation';
+import {
+  RegisterInput,
+  LoginInput,
+  GoogleAuthInput,
+  UpdateProfileInput,
+  ChangePasswordInput,
+} from '../validations/auth.validation';
 import { IUser, UserRole } from '../types';
 import { verifyGoogleIdToken } from '../utils/google';
 
@@ -93,6 +99,54 @@ export class AuthService {
 
     const token = generateToken(user._id.toString(), user.email, user.role);
     return { user, token, isNewUser };
+  }
+
+  async updateProfile(userId: string, input: UpdateProfileInput): Promise<IUser> {
+    const user = await User.findById(userId);
+    if (!user) {
+      throw new AppError('User not found', 404);
+    }
+
+    const email = input.email.toLowerCase();
+    if (email !== user.email) {
+      const taken = await User.findOne({ email, _id: { $ne: userId } });
+      if (taken) {
+        throw new AppError('Email is already in use', 409);
+      }
+      user.email = email;
+    }
+
+    user.name = input.name;
+    user.phone = input.phone || undefined;
+    user.jobTitle = input.jobTitle || undefined;
+    user.company = input.company || undefined;
+    user.location = input.location || undefined;
+    user.bio = input.bio || undefined;
+
+    await user.save();
+    return user;
+  }
+
+  async changePassword(userId: string, input: ChangePasswordInput): Promise<void> {
+    const user = await User.findById(userId).select('+password');
+    if (!user) {
+      throw new AppError('User not found', 404);
+    }
+
+    if (!user.password) {
+      throw new AppError(
+        'This account uses Google sign-in. Set a password via account recovery or contact support.',
+        400
+      );
+    }
+
+    const isMatch = await user.comparePassword(input.currentPassword);
+    if (!isMatch) {
+      throw new AppError('Current password is incorrect', 401);
+    }
+
+    user.password = input.newPassword;
+    await user.save();
   }
 }
 

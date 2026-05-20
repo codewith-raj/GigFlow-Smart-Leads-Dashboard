@@ -1,5 +1,7 @@
 import React, { useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { Sun, Moon } from 'lucide-react';
+import UserAvatar from '@/components/profile/UserAvatar';
 import { useAuthStore } from '@/store/authStore';
 import { useThemeStore } from '@/store/themeStore';
 import { usePageMeta } from '@/hooks/usePageMeta';
@@ -48,13 +50,14 @@ const TopNavbar: React.FC = () => {
             </span>
           )}
 
-          <div
-            className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-red-500 to-red-600 text-sm font-bold text-white shadow-md ring-2 ring-slate-900/50"
-            title={user?.name}
-            aria-hidden
+          <Link
+            to="/profile"
+            className="flex-shrink-0 rounded-full ring-2 ring-transparent transition hover:ring-red-500/40 focus-visible:outline-none focus-visible:ring-red-500/50"
+            title="My profile"
+            aria-label="Open my profile"
           >
-            {user?.name?.[0]?.toUpperCase() ?? 'U'}
-          </div>
+            <UserAvatar user={user} size="sm" showStatus />
+          </Link>
         </div>
       </div>
     </header>

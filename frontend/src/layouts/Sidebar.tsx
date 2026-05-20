@@ -9,6 +9,7 @@ import {
   PanelLeft,
   Users,
   Shield,
+  UserCircle,
 } from 'lucide-react';
 import { useAuthStore } from '@/store/authStore';
 import { useSidebar } from '@/contexts/SidebarContext';
@@ -28,6 +29,12 @@ const navItems: NavItem[] = [
     path: '/dashboard',
     icon: LayoutDashboard,
     description: 'Pipeline & analytics',
+  },
+  {
+    label: 'My Profile',
+    path: '/profile',
+    icon: UserCircle,
+    description: 'Account & security',
   },
 ];
 
@@ -151,25 +158,50 @@ const Sidebar: React.FC = () => {
         className={`flex-shrink-0 border-t border-slate-800/80 p-3 ${isCollapsed ? 'flex flex-col items-center gap-2' : 'space-y-2'}`}
       >
         {user && !isCollapsed && (
-          <div className="flex items-center gap-3 rounded-xl border border-slate-700/40 bg-slate-800/40 p-3">
+          <NavLink
+            to="/profile"
+            onClick={closeMobile}
+            className={({ isActive }) =>
+              `flex items-center gap-3 rounded-xl border p-3 transition-all touch-manipulation ${
+                isActive
+                  ? 'border-red-500/30 bg-red-600/10'
+                  : 'border-slate-700/40 bg-slate-800/40 hover:border-slate-600/50 hover:bg-slate-800/70'
+              }`
+            }
+          >
             <div className="relative flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-red-500 to-red-700 text-xs font-bold text-white shadow-lg shadow-red-900/30 ring-2 ring-slate-900/80">
-              {initials}
+              {user.avatar ? (
+                <img src={user.avatar} alt="" className="h-full w-full rounded-full object-cover" />
+              ) : (
+                initials
+              )}
               <span className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full border-2 border-slate-900 bg-emerald-500" title="Active" />
             </div>
-            <div className="min-w-0 flex-1">
+            <div className="min-w-0 flex-1 text-left">
               <p className="truncate text-sm font-semibold text-slate-100">{user.name}</p>
               <p className="truncate text-[11px] text-slate-500">{user.email}</p>
+              <p className="mt-0.5 text-[10px] font-medium text-red-400/90">View profile →</p>
             </div>
-          </div>
+          </NavLink>
         )}
 
         {user && isCollapsed && (
-          <div
-            className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-red-500 to-red-700 text-xs font-bold text-white"
+          <NavLink
+            to="/profile"
+            onClick={closeMobile}
             title={user.name}
+            className={({ isActive }) =>
+              `flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-red-500 to-red-700 text-xs font-bold text-white transition ring-2 ${
+                isActive ? 'ring-red-400/50' : 'ring-transparent hover:ring-slate-600'
+              }`
+            }
           >
-            {initials}
-          </div>
+            {user.avatar ? (
+              <img src={user.avatar} alt="" className="h-full w-full rounded-full object-cover" />
+            ) : (
+              initials
+            )}
+          </NavLink>
         )}
 
         <button
