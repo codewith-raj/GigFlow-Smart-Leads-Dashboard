@@ -4,9 +4,9 @@ import { useAuthStore } from '@/store/authStore';
 import Loader from '@/components/ui/Loader';
 
 const PublicRoute: React.FC = () => {
-  const { isAuthenticated, isHydrated, isCheckingAuth } = useAuthStore();
+  const { isAuthenticated, isHydrated } = useAuthStore();
 
-  if (!isHydrated || isCheckingAuth) {
+  if (!isHydrated) {
     return <Loader fullscreen text="Checking your session..." />;
   }
 

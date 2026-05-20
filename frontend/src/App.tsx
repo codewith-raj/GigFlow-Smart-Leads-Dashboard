@@ -29,6 +29,8 @@ const queryClient = new QueryClient({
 const AuthBootstrap: React.FC = () => {
   const {
     token,
+    user,
+    isAuthenticated,
     isHydrated,
     isCheckingAuth,
     setAuth,
@@ -43,6 +45,10 @@ const AuthBootstrap: React.FC = () => {
 
     if (!token) {
       clearAuth();
+      return;
+    }
+
+    if (user && isAuthenticated) {
       return;
     }
 
@@ -67,7 +73,16 @@ const AuthBootstrap: React.FC = () => {
     return () => {
       mounted = false;
     };
-  }, [token, isHydrated, isCheckingAuth, setAuth, clearAuth, setCheckingAuth]);
+  }, [
+    token,
+    user,
+    isAuthenticated,
+    isHydrated,
+    isCheckingAuth,
+    setAuth,
+    clearAuth,
+    setCheckingAuth,
+  ]);
 
   return null;
 };

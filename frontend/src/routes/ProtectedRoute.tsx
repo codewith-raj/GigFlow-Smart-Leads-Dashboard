@@ -10,9 +10,9 @@ interface ProtectedRouteProps {
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   redirectTo = '/login',
 }) => {
-  const { isAuthenticated, isHydrated, isCheckingAuth } = useAuthStore();
+  const { isAuthenticated, isHydrated } = useAuthStore();
 
-  if (!isHydrated || isCheckingAuth) {
+  if (!isHydrated) {
     return <Loader fullscreen text="Restoring your session..." />;
   }
 
