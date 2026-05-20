@@ -7,7 +7,8 @@
 ## 🚀 Live Demo
 
 - Frontend: `https://gig-flow-smart-leads-dashboard-alpha.vercel.app/login`
-- Backend: `https://gigflow-smart-leads-dashboard-ptr4.onrender.com`
+- Backend API base: `https://gigflow-smart-leads-dashboard-ptr4.onrender.com`
+  - API endpoints are available under `/api`
 
 ---
 
@@ -182,7 +183,8 @@ See [API.md](./API.md) for full API details, request payloads, and response sche
 ## ✅ Deployment
 
 - Frontend: `https://gig-flow-smart-leads-dashboard-alpha.vercel.app/login`
-- Backend: `https://gigflow-smart-leads-dashboard-ptr4.onrender.com`
+- Backend API base: `https://gigflow-smart-leads-dashboard-ptr4.onrender.com`
+  - API endpoints are available under `/api`
 
 ---
 
